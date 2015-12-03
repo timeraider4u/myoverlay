@@ -1,10 +1,9 @@
---- CMakeLists.txt~	2015-07-22 17:42:27.000000000 +0200
-+++ CMakeLists.txt	2015-07-22 17:45:29.759878388 +0200
-@@ -724,3 +724,13 @@
+--- CMakeLists.txt.original	2015-12-03 23:35:45.727569487 +0100
++++ CMakeLists.txt	2015-12-03 23:37:36.214564866 +0100
+@@ -648,6 +648,17 @@
+ # Enable packaging
  ####################################################################
- 
  include (CPack)
-+
 +INSTALL(FILES CMakeLists.txt AxelConfig.cmake
 +       DESTINATION "."
 +       )
@@ -14,3 +13,8 @@
 +INSTALL(FILES "${PROJECT_BINARY_DIR}/axlCoreExport.h"
 +       DESTINATION "include/axlCore/"
 +       )
++
++INSTALL(DIRECTORY "${PROJECT_BINARY_DIR}/plugins" DESTINATION /opt/axel-sdk/ )
+ 
+ ####################################################################
+ # Installer

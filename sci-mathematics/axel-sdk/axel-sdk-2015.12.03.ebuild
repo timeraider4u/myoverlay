@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit eutils git-2 cmake-utils autotools
+inherit eutils cmake-utils autotools
 
 DESCRIPTION="Axel is an algebraic geometric modeling platform."
 HOMEPAGE="http://dtk.inria.fr/axel/"
@@ -14,31 +14,22 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-EGIT_REPO_URI="git://dtk.inria.fr/axel/axel-sdk.git"
-EGIT_BRANCH="master"
+SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
-RDEPEND=""
+RDEPEND="sci-libs/vtk[rendering]"
 DEPEND="${RDEPEND}"
 
 PREFIX="/opt/axel-sdk"
 PREFIX2="${ROOT}${PREFIX}"
 CMAKE_INSTALL_PREFIX="${PREFIX}"
 
-# handled automatically by git-2.eclass
-#src_unpack() {
-#	git-2_src_unpack	
-#	cd "${S}"
-#}
-
 QT_DIR="/opt/Qt5.5.0/5.5/gcc_64"
 
 src_prepare() {
-	cp "${FILESDIR}/axel-sdk.conf" "${S}/axel-sdk.conf"
-	cp "${FILESDIR}/AxelConfig.cmake" "${S}/AxelConfig.cmake"
+	cp "${FILESDIR}/axel-sdk.conf" "${S}/axel-sdk.conf" || "could not copy axel-sdk.conf"
+	cp "${FILESDIR}/AxelConfig.cmake" "${S}/AxelConfig.cmake" || die "could not copy AxelConfig.cmake"
 	epatch "${FILESDIR}/${PN}-${PV}-CMakeLists.txt.patch"
-	#elog "executing ./scripts/config_anonym"
-	./scripts/config_anonym
-	#elog "./scripts/config_anonym done"
+	./script/config_anonym || die "config_anonym could not be executed"
 	epatch "${FILESDIR}/${PN}-${PV}-axel-CMakeLists.txt.patch"
 	epatch "${FILESDIR}/${PN}-${PV}-dtk-CMakeLists.txt.patch"
 }
@@ -56,7 +47,6 @@ src_configure() {
 }
 
 src_install() {
-	elog "in src_install"
 	default_src_install
 	cmake-utils_src_install
 	elog "executing installation adjustments"

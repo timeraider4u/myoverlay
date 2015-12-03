@@ -1,8 +1,0 @@
---- scripts/config_anonym	2014-12-16 13:02:22.977421198 +0100
-+++ scripts/config_anonym	2014-12-15 16:12:38.479268043 +0100
-@@ -1,5 +1,5 @@
- if ! test -d dtk ; then git clone git://dtk.inria.fr/dtk/dtk-clone-axel.git dtk; fi
--if ! test -d axel ; then git clone git://dtk.inria.fr/axel/axel.git axel; fi
--if ! test -d vtkview ; then git clone git://dtk.inria.fr/axel/vtkview.git vtkview; fi
-+if ! test -d axel ; then git clone --branch master_legacy git://dtk.inria.fr/axel/axel.git axel; fi
-+if ! test -d vtkview ; then git clone --branch master_legacy git://dtk.inria.fr/axel/vtkview.git vtkview; fi
