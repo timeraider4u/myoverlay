@@ -1,0 +1,16 @@
+--- CMakeLists.txt~	2015-07-22 17:42:27.000000000 +0200
++++ CMakeLists.txt	2015-07-22 17:45:29.759878388 +0200
+@@ -724,3 +724,13 @@
+ ####################################################################
+ 
+ include (CPack)
++
++INSTALL(FILES CMakeLists.txt AxelConfig.cmake
++       DESTINATION "."
++       )
++
++set (AXEL_LIBRARY_DIR ${AXEL_LIBRARY_DIR} /opt/axel-sdk/lib/ )
++
++INSTALL(FILES "${PROJECT_BINARY_DIR}/axlCoreExport.h"
++       DESTINATION "include/axlCore/"
++       )

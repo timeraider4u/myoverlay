@@ -1,0 +1,14 @@
+--- sci-mathematics/axel-sdk-2015.07/work/axel-sdk-2015.07/dtk/CMakeLists.txt~	2015-07-22 18:04:01.000000000 +0200
++++ sci-mathematics/axel-sdk-2015.07/work/axel-sdk-2015.07/dtk/CMakeLists.txt	2015-07-22 18:06:22.406113100 +0200
+@@ -452,5 +452,11 @@
+ 
+ include(CPack)
+ 
++
++install(DIRECTORY src/dtkCore
++        DESTINATION include
++        FILES_MATCHING PATTERN "*.h" 
++)
++
+ ######################################################################
+ ### CMakeLists.txt ends here
