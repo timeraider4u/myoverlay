@@ -10,8 +10,8 @@
 +        FILES_MATCHING PATTERN "*.h" 
 +)
 +
-+install(FILES "${PROJECT_BINARY_DIR}/dtkConfig.cmake"
-+		DESTINATION /opt/axel-sdk/ )
++#install(FILES "${PROJECT_BINARY_DIR}/install/dtkConfig.cmake"
++#		DESTINATION /opt/axel-sdk/ )
 +
  ######################################################################
  ### CMakeLists.txt ends here

@@ -76,6 +76,7 @@ src_install() {
 	dodir /etc/ld.so.conf.d
 	insinto /etc/ld.so.conf.d
 	doins axel-sdk.conf
+	cp "${FILESDIR}/dtkConfig.cmake" "${PREFIX2}/" || die "could not copy dtkConfig.cmake file!"
 }
 
 pkg_postinst() {
