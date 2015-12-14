@@ -30,12 +30,12 @@ KEYWORDS="amd64 ~arm x86 ~amd64-linux ~x86-linux"
 SLOT="0"
 IUSE="
 	all-modules aqua boost cg doc examples imaging ffmpeg gdal java json kaapi mpi
-	mysql odbc offscreen postgres python qt4 rendering smp tbb test theora tk tcl
-	video_cards_nvidia views web xdmf2 R +X"
+	mysql odbc offscreen postgres python qt4 qt5 rendering smp tbb test theora tk 
+	tcl video_cards_nvidia views web xdmf2 R +X"
 
 REQUIRED_USE="
 	all-modules? ( python xdmf2 )
-	java? ( qt4 )
+	java? ( || ( qt4 qt5 ) )
 	python? ( ${PYTHON_REQUIRED_USE} )
 	tcl? ( rendering )
 	smp? ( ^^ ( kaapi tbb ) )
@@ -43,6 +43,7 @@ REQUIRED_USE="
 	tk? ( tcl )
 	web? ( python )
 	^^ ( X aqua offscreen )
+	^^ ( qt4 qt5 )
 	"
 
 RDEPEND="
@@ -95,6 +96,15 @@ RDEPEND="
 		dev-qt/qtsql:4
 		dev-qt/qtwebkit:4
 		python? ( dev-python/PyQt4[${PYTHON_USEDEP}] )
+		)
+	qt5? (
+		dev-qt/designer:5
+		dev-qt/qtcore:5
+		dev-qt/qtgui:5
+		dev-qt/qtopengl:5
+		dev-qt/qtsql:5
+		dev-qt/qtwebkit:5
+		python? ( dev-python/PyQt5[${PYTHON_USEDEP}] )
 		)
 	tbb? ( dev-cpp/tbb )
 	tcl? ( dev-lang/tcl:0= )
@@ -296,42 +306,44 @@ src_configure() {
 		)
 	fi
 
-	#if use qt4; then
-	#	mycmakeargs+=(
-	#		-DVTK_USE_QVTK=ON
-	#		-DVTK_USE_QVTK_OPENGL=ON
-	#		-DVTK_USE_QVTK_QTOPENGL=ON
-	#		-DQT_WRAP_CPP=ON
-	#		-DQT_WRAP_UI=ON
-	#		-DVTK_INSTALL_QT_DIR=/$(get_libdir)/qt4/plugins/designer
-	#		-DDESIRED_QT_VERSION=4
-	#		-DVTK_QT_VERSION=4
-	#		-DQT_MOC_EXECUTABLE="$(qt4_get_bindir)/moc"
-	#		-DQT_UIC_EXECUTABLE="$(qt4_get_bindir)/uic"
-	#		-DQT_INCLUDE_DIR="${EPREFIX}/usr/include/qt4"
-	#		-DQT_QMAKE_EXECUTABLE="$(qt4_get_bindir)/qmake"
-	#	)
-	#fi
+	if use qt4; then
+		mycmakeargs+=(
+			-DVTK_USE_QVTK=ON
+			-DVTK_USE_QVTK_OPENGL=ON
+			-DVTK_USE_QVTK_QTOPENGL=ON
+			-DQT_WRAP_CPP=ON
+			-DQT_WRAP_UI=ON
+			-DVTK_INSTALL_QT_DIR=/$(get_libdir)/qt4/plugins/designer
+			-DDESIRED_QT_VERSION=4
+			-DVTK_QT_VERSION=4
+			-DQT_MOC_EXECUTABLE="$(qt4_get_bindir)/moc"
+			-DQT_UIC_EXECUTABLE="$(qt4_get_bindir)/uic"
+			-DQT_INCLUDE_DIR="${EPREFIX}/usr/include/qt4"
+			-DQT_QMAKE_EXECUTABLE="$(qt4_get_bindir)/qmake"
+		)
+	fi
 	
-	mycmakeargs+=(
-		-DVTK_USE_QVTK=ON
-		-DVTK_USE_QVTK_OPENGL=ON
-		-DVTK_USE_QVTK_QTOPENGL=ON
-		-DQT_WRAP_CPP=ON
-		-DQT_WRAP_UI=ON
-		-DVTK_QT_VERSION:STRING=5
-		-DQT_QMAKE_EXECUTABLE:PATH=/opt/Qt5.5.0/5.5/gcc_64/bin/qmake
-		-DVTK_Group_Qt:BOOL=ON
-		-DCMAKE_PREFIX_PATH:PATH=/opt/Qt5.5.0/5.5/gcc_64/lib/cmake
-		-DBUILD_SHARED_LIBS:BOOL=ON
-		-DVTK_INSTALL_QT_DIR=/opt/Qt5.5.0/5.5/gcc_64/plugins/designer/
-		-DDESIRED_QT_VERSION=5
-		-DVTK_QT_VERSION=5
-		-DQT_MOC_EXECUTABLE="/opt/Qt5.5.0/5.5/gcc_64/bin/moc"
-		-DQT_UIC_EXECUTABLE="/opt/Qt5.5.0/5.5/gcc_64/bin//uic"
-		-DQT_INCLUDE_DIR="/opt/Qt5.5.0/5.5/gcc_64/include/"
-		-DQT_QMAKE_EXECUTABLE="/opt/Qt5.5.0/5.5/gcc_64/bin/qmake"
-	)
+	if use qt5; then
+		mycmakeargs+=(
+			-DVTK_USE_QVTK=ON
+			-DVTK_USE_QVTK_OPENGL=ON
+			-DVTK_USE_QVTK_QTOPENGL=ON
+			-DQT_WRAP_CPP=ON
+			-DQT_WRAP_UI=ON
+			-DVTK_QT_VERSION:STRING=5
+			#-DQT_QMAKE_EXECUTABLE:PATH=/opt/Qt5.5.0/5.5/gcc_64/bin/qmake
+			-DVTK_Group_Qt:BOOL=ON
+			#-DCMAKE_PREFIX_PATH:PATH=/opt/Qt5.5.0/5.5/gcc_64/lib/cmake
+			-DBUILD_SHARED_LIBS:BOOL=ON
+			-DVTK_INSTALL_QT_DIR=/$(get_libdir)/qt5/plugins/designer/
+			-DDESIRED_QT_VERSION=5
+			-DVTK_QT_VERSION=5
+			-DQT_MOC_EXECUTABLE="$(qt5_get_bindir)/moc"
+			-DQT_UIC_EXECUTABLE="$(qt5_get_bindir)/uic"
+			-DQT_INCLUDE_DIR="${EPREFIX}/usr/include/qt5"
+			#-DQT_QMAKE_EXECUTABLE="/opt/Qt5.5.0/5.5/gcc_64/bin/qmake"
+		)
+	fi
 
 	if use R; then
 		mycmakeargs+=(
