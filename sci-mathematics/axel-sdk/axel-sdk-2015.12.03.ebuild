@@ -23,8 +23,6 @@ PREFIX="/opt/axel-sdk"
 PREFIX2="${ROOT}${PREFIX}"
 CMAKE_INSTALL_PREFIX="${PREFIX}"
 
-QT_DIR="/opt/Qt5.5.0/5.5/gcc_64"
-
 src_prepare() {
 	cp "${FILESDIR}/axel-sdk.conf" "${S}/axel-sdk.conf" || "could not copy axel-sdk.conf"
 	cp "${FILESDIR}/AxelConfig.cmake" "${S}/AxelConfig.cmake" || die "could not copy AxelConfig.cmake"
@@ -38,9 +36,6 @@ src_configure() {
    # general configuration
    local mycmakeargs=(
        -DVTK_QT_VERSION:STRING=5
-       -DQT_QMAKE_EXECUTABLE:PATH="${QT_DIR}"/bin/qmake 
-       -DCMAKE_PREFIX_PATH:PATH="${QT_DIR}"/lib/cmake
-   #    -DVTK_DIR=/Users/cg/Documents/axel-sdk/build-vtk
    )
    
    cmake-utils_src_configure
