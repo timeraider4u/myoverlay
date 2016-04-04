@@ -1,17 +1,17 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
-inherit eutils cmake-utils autotools
+inherit eutils cmake-utils
 
 DESCRIPTION="Axel is an algebraic geometric modeling platform."
 HOMEPAGE="http://dtk.inria.fr/axel/"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
@@ -33,19 +33,18 @@ src_prepare() {
 }
 
 src_configure() {
-   # general configuration
-   local mycmakeargs=(
-       -DVTK_QT_VERSION:STRING=5
-   )
-   
-   cmake-utils_src_configure
+	# general configuration
+	local mycmakeargs=(
+		-DVTK_QT_VERSION:STRING=5
+		)
+	cmake-utils_src_configure
 }
 
 src_install() {
 	default_src_install
 	cmake-utils_src_install
 	elog "executing installation adjustments"
-	
+
 	fowners ${rootuser}:video ${PREFIX}/plugins
 	fperms 0775 "${PREFIX}/plugins"
 	dodir /opt/bin
@@ -54,16 +53,16 @@ src_install() {
 	fowners ${rootuser}:video ${PREFIX}/cmake/plugins
 	fperms 0775 "${PREFIX}/cmake/plugins"
 	# add symlinks for include directories
-	dosym ${PREFIX}/include/dtk/dtkConfig.h ${ROOT}/usr/include/dtkConfig.h
+	dosym "${PREFIX}/include/dtk/dtkConfig.h" "${ROOT}/usr/include/dtkConfig.h"
 	for FILE in $(find "${D}/${PREFIX}/include/" -type d); do
 		NAME=$(basename ${FILE})
-		dosym ${PREFIX}/include/${NAME} ${ROOT}/usr/include/${NAME}
+		dosym "${PREFIX}/include/${NAME}" "${ROOT}/usr/include/${NAME}"
 	done
 	# add symlink for axlCoreExport.h
 	#dodir ${PREFIX}/include/axlCore/
 	#dosym ${PREFIX}/include/axlCore/axlCoreExport.h ${ROOT}/usr/include/axlCore/axlCoreExport.h
 	# add symlinks for lib64-files in /opt/axel-sdk
-	for FILE in $(ls ${D}/${PREFIX}/lib64); do
+	for FILE in $(ls "${D}/${PREFIX}/lib64"); do
 		NAME=$(basename ${FILE})
 		dosym ${PREFIX}/lib64/${NAME} ${PREFIX2}/lib/${NAME}
 	done
@@ -76,5 +75,5 @@ src_install() {
 
 pkg_postinst() {
 	# update ldconfig
-    ldconfig
+	ldconfig
 }

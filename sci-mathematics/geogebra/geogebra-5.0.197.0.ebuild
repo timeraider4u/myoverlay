@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -21,12 +21,12 @@ RDEPEND=">=virtual/jdk-1.6.0-r1
 
 src_unpack() {
 	unpack ${A}
-	mv ${WORKDIR}/* ${WORKDIR}/${P} || die "could not rename directory in workdir"
+	mv "${WORKDIR}/*" "${WORKDIR}/${P}" || die "could not rename directory in workdir"
 }
 
 src_install() {
-	dodir /usr/share/${PN}/
+	dodir "/usr/share/${PN}/"
 	dodir /usr/bin
-	cp -R ${WORKDIR}/${P}/${PN} ${D}/usr/share/ || die "install failed"
-	dosym ../share/${PN}/${PN} /usr/bin/${PN}
+	cp -R "${WORKDIR}/${P}/${PN}" "${D}/usr/share/" || die "install failed"
+	dosym "/usr/share/${PN}/${PN}" "/usr/bin/${PN}"
 }

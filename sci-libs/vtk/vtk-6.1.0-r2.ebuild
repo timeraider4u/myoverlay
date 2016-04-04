@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -26,11 +26,11 @@ SRC_URI="
 	"
 
 LICENSE="BSD LGPL-2"
-KEYWORDS="amd64 ~arm x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64 ~x86"
 SLOT="0"
 IUSE="
 	all-modules aqua boost cg doc examples imaging ffmpeg gdal java json kaapi mpi
-	mysql odbc offscreen postgres python qt4 qt5 rendering smp tbb test theora tk 
+	mysql odbc offscreen postgres python qt4 qt5 rendering smp tbb test theora tk
 	tcl video_cards_nvidia views web xdmf2 R +X"
 
 REQUIRED_USE="
@@ -229,7 +229,7 @@ src_configure() {
 		$(cmake-utils_use imaging VTK_Group_Imaging)
 		$(cmake-utils_use mpi VTK_Group_MPI)
 		#$(cmake-utils_use qt4 VTK_Group_Qt)
-		
+
 		$(cmake-utils_use rendering VTK_Group_Rendering)
 		$(cmake-utils_use tk VTK_Group_Tk)
 		$(cmake-utils_use views VTK_Group_Views)
@@ -322,7 +322,7 @@ src_configure() {
 			-DQT_QMAKE_EXECUTABLE="$(qt4_get_bindir)/qmake"
 		)
 	fi
-	
+
 	if use qt5; then
 		mycmakeargs+=(
 			-DVTK_USE_QVTK=ON
