@@ -31,9 +31,10 @@ before_script:
     - SIZE=$(stat -c %s .travis.yml.upstream)
     - if ! cmp -n $SIZE -s .travis.yml .travis.yml.upstream; then echo -e "\e[31m !!! .travis.yml outdated! Update available https://github.com/mrueg/repoman-travis \e[0m" > /tmp/update ; fi
     - cd travis-overlay
-    - whoami
 script:
     - ./../spinner.sh "python ../portage-${PORTAGE_VER}/bin/repoman full -d"
+    - whoami
+    - groups
     - ls -la /var/tmp
     - ls -la /var/tmp/portage
     - for FILE in $(find -name "*.ebuild"); do python ../portage-${PORTAGE_VER}/bin/ebuild $FILE install; done
