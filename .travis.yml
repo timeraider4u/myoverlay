@@ -33,9 +33,4 @@ before_script:
     - cd travis-overlay
 script:
     - ./../spinner.sh "python ../portage-${PORTAGE_VER}/bin/repoman full -d"
-    - whoami
-    - sudo -E su $USER -c 'groups'
-    - ls -la /var/tmp
-    - ls -la /var/tmp/portage
-    - sudo -E su $USER -c 'for FILE in $(find -name "*.ebuild"); do python ../portage-${PORTAGE_VER}/bin/ebuild $FILE install; done'
-# You can append own scripts after this line
+    - sudo -E su $USER -c './../ebuild-testing.sh'
