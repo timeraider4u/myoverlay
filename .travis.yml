@@ -30,4 +30,6 @@ before_script:
     - cd travis-overlay
 script:
     - ./../spinner.sh "python ../portage-${PORTAGE_VER}/bin/repoman full -d"
+    # for FILE in $(find -name "*.ebuild"); do DIR=$(dirname $FILE); cd $DIR; pwd; python ../../../portage-2.2.28/bin/ebuild $FILE install; done
+    
 # You can append own scripts after this line
