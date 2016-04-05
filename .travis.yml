@@ -25,7 +25,7 @@ before_script:
     - tar xzf portage-tree.tar.gz -C /usr/portage --strip-components=1
     - cp portage-${PORTAGE_VER}/cnf/repos.conf /etc/portage/
     - ln -s /usr/portage/profiles/base/ /etc/portage/make.profile
-    - exec /bin/bash -l
+    - sudo su $USER
     - sudo mkdir /var/tmp/portage
     - sudo chown portage:portage /var/tmp/portage
     - sudo chmod 0775 /var/tmp/portage
