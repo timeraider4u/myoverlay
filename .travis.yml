@@ -34,4 +34,6 @@ before_script:
 script:
     - ./../spinner.sh "python ../portage-${PORTAGE_VER}/bin/repoman full -d"
     - sudo -E su $USER -c 'pwd'
+    - sudo -E su $USER -c 'ls -la ./'
+    - sudo -E su $USER -c 'ls -la ./../'
     - sudo -E su $USER -c './../ebuild-testing.sh'
