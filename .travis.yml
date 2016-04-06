@@ -33,4 +33,5 @@ before_script:
     - cd travis-overlay
 script:
     - ./../spinner.sh "python ../portage-${PORTAGE_VER}/bin/repoman full -d"
+    - sudo -E su $USER -c 'pwd'
     - sudo -E su $USER -c './../ebuild-testing.sh'
