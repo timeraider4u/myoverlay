@@ -18,3 +18,11 @@ SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz -> ${P}.tar.
 
 RDEPEND="~sci-libs/dtk-${PV}"
 DEPEND="${RDEPEND}"
+
+src_configure() {
+	local mycmakeargs=(
+		-DDTK_USED=ON
+		-DCMAKE_CXX_FLAGS="-std=c++0x"
+	)
+	cmake-utils_src_configure
+}

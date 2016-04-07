@@ -28,61 +28,14 @@ RDEPEND="dev-qt/qtcore:5
 DEPEND="${RDEPEND}
 	dev-lang/swig:0"
 
-#PREFIX="/opt/axel-sdk"
-#PREFIX2="${ROOT}${PREFIX}"
-#CMAKE_INSTALL_PREFIX="${PREFIX}"
-
-#src_prepare() {
-#	cp "${FILESDIR}/axel-sdk.conf" "${S}/axel-sdk.conf" || "could not copy axel-sdk.conf"
-#	cp "${FILESDIR}/AxelConfig.cmake" "${S}/AxelConfig.cmake" || die "could not copy AxelConfig.cmake"
-#	epatch "${FILESDIR}/${PN}-${PV}-CMakeLists.txt.patch"
-#	./script/config_anonym || die "config_anonym could not be executed"
-#	epatch "${FILESDIR}/${PN}-${PV}-axel-CMakeLists.txt.patch"
-#	epatch "${FILESDIR}/${PN}-${PV}-dtk-CMakeLists.txt.patch"
-#}
-
-#src_configure() {
-	# general configuration
-#	local mycmakeargs=(
-#		-DVTK_QT_VERSION:STRING=5
-#		)
-#	cmake-utils_src_configure
-#}
-
-#src_install() {
-#	default_src_install
-#	cmake-utils_src_install
-#	elog "executing installation adjustments"
-#
-#	fowners ${rootuser}:video ${PREFIX}/plugins
-#	fperms 0775 "${PREFIX}/plugins"
-#	dodir /opt/bin
-#	dosym ${PREFIX}/bin/axel /opt/bin/axel
-#	dodir ${PREFIX}/cmake/plugins
-#	fowners ${rootuser}:video ${PREFIX}/cmake/plugins
-#	fperms 0775 "${PREFIX}/cmake/plugins"
-#	# add symlinks for include directories
-#	dosym "${PREFIX}/include/dtk/dtkConfig.h" "${ROOT}/usr/include/dtkConfig.h"
-#	for FILE in $(find "${D}/${PREFIX}/include/" -type d); do
-#		NAME=$(basename ${FILE})
-#		dosym "${PREFIX}/include/${NAME}" "${ROOT}/usr/include/${NAME}"
-#	done
-#	# add symlink for axlCoreExport.h
-#	#dodir ${PREFIX}/include/axlCore/
-#	#dosym ${PREFIX}/include/axlCore/axlCoreExport.h ${ROOT}/usr/include/axlCore/axlCoreExport.h
-#	# add symlinks for lib64-files in /opt/axel-sdk
-#	for FILE in $(ls "${D}/${PREFIX}/lib64"); do
-#		NAME=$(basename ${FILE})
-#		dosym ${PREFIX}/lib64/${NAME} ${PREFIX2}/lib/${NAME}
-#	done
-#	# add ld.so.config file 
-#	dodir /etc/ld.so.conf.d
-#	insinto /etc/ld.so.conf.d
-#	doins axel-sdk.conf
-#	cp "${FILESDIR}/dtkConfig.cmake" "${D}/${PREFIX}/" || die "could not copy dtkConfig.cmake file!"
-#}
-
-#pkg_postinst() {
-	# update ldconfig
-#	ldconfig
-#}
+src_configure() {
+	local mycmakeargs=(
+		-DDTK_BUILD_SUPPORT_COMPOSER=ON
+		-DDTK_BUILD_SUPPORT_CORE=ON
+		-DDTK_BUILD_SUPPORT_CONTAINER=ON
+		-DDTK_BUILD_SUPPORT_DISTRIBUTED=ON
+		-DDTK_BUILD_SUPPORT_GUI=ON
+		-DDTK_BUILD_SUPPORT_MATH=ON
+	)
+	cmake-utils_src_configure
+}
