@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit eutils cmake-utils
+inherit eutils cmake-utils # flag-o-matic
 
 DESCRIPTION="Axel is an algebraic geometric modeling platform"
 HOMEPAGE="http://dtk.inria.fr/axel/"
@@ -19,10 +19,14 @@ SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz -> ${P}.tar.
 RDEPEND="~sci-libs/dtk-${PV}"
 DEPEND="${RDEPEND}"
 
+src_prepare() {
+	epatch "${FILESDIR}/CMakeLists-${PV}.txt.patch"
+}
+
 src_configure() {
+	#append-cxxflags -std=c++11
 	local mycmakeargs=(
 		-DDTK_USED=ON
-		-DCMAKE_CXX_FLAGS="-std=c++0x"
 	)
 	cmake-utils_src_configure
 }

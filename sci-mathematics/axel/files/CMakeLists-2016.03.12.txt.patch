@@ -1,0 +1,11 @@
+--- CMakeLists.txt.orig	2016-04-07 21:53:02.834622848 +0200
++++ CMakeLists.txt	2016-04-07 21:53:18.002622214 +0200
+@@ -139,7 +139,7 @@
+ ENDIF (DEBUG)
+ 
+ IF (OPTIMIZE)
+-  set(AXEL_CXX_FLAGS  "${AXEL_CXX_FLAGS} -ansi -Wall -O3 -fexpensive-optimizations")
++  set(AXEL_CXX_FLAGS  "${AXEL_CXX_FLAGS} -Wall -O3 -fexpensive-optimizations")
+ ENDIF (OPTIMIZE)
+ 
+ set(AXEL_CXX_FLAGS  "${AXEL_CXX_FLAGS} -ftemplate-depth-150")
