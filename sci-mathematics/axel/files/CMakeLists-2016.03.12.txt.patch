@@ -9,7 +9,7 @@
  ENDIF (OPTIMIZE)
  
  set(AXEL_CXX_FLAGS  "${AXEL_CXX_FLAGS} -ftemplate-depth-150")
-@@ -309,18 +309,18 @@
+@@ -309,18 +309,22 @@
  ####################################################################
  if(BUILD_FOR_RELEASE)
  configure_file ( "${PROJECT_SOURCE_DIR}/cmake/install-AxelConfig.cmake.in"
@@ -29,8 +29,12 @@
  
 -install ( FILES "${CMAKE_BINARY_DIR}/for_installer/include/axel-config.h"
 -          DESTINATION include)
-+install ( FILES "${CMAKE_BINARY_DIR}//include/Axel/axel-config.h"
++install ( FILES "${CMAKE_BINARY_DIR}/include/Axel/axel-config.h"
 +          DESTINATION include/Axel)
++install ( FILES "${CMAKE_BINARY_DIR}/src/axlCore/axlCoreExport.h"
++          DESTINATION include/axlCore)
++install ( FILES "${CMAKE_BINARY_DIR}/src/axlGui/axlGuiExport.h"
++          DESTINATION include/axlGui)
  endif(BUILD_FOR_RELEASE)
  ######################################################################
  # Update
