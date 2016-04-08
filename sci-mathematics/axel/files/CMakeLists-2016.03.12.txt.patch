@@ -1,5 +1,5 @@
---- CMakeLists.txt.orig	2016-04-07 21:53:02.834622848 +0200
-+++ CMakeLists.txt	2016-04-07 21:53:18.002622214 +0200
+--- CMakeLists.txt.orig	2016-04-08 01:59:40.180003981 +0200
++++ CMakeLists.txt	2016-04-08 02:05:42.486988828 +0200
 @@ -139,7 +139,7 @@
  ENDIF (DEBUG)
  
@@ -9,3 +9,28 @@
  ENDIF (OPTIMIZE)
  
  set(AXEL_CXX_FLAGS  "${AXEL_CXX_FLAGS} -ftemplate-depth-150")
+@@ -309,18 +309,18 @@
+ ####################################################################
+ if(BUILD_FOR_RELEASE)
+ configure_file ( "${PROJECT_SOURCE_DIR}/cmake/install-AxelConfig.cmake.in"
+-                 "${CMAKE_BINARY_DIR}/for_installer/lib/cmake/AxelConfig.cmake"
++                 "${CMAKE_BINARY_DIR}/lib/cmake/Axel/AxelConfig.cmake"
+                   @ONLY IMMEDIATE)
+ 
+-install ( FILES "${CMAKE_BINARY_DIR}/for_installer/lib/cmake/AxelConfig.cmake"
+-          DESTINATION lib/cmake)
++install ( FILES "${CMAKE_BINARY_DIR}/lib/cmake/Axel/AxelConfig.cmake"
++          DESTINATION lib/cmake/Axel)
+ 
+ configure_file ( "${PROJECT_SOURCE_DIR}/cmake/install-axel-config.h.in"
+-                 "${CMAKE_BINARY_DIR}/for_installer/include/axel-config.h"
++                 "${CMAKE_BINARY_DIR}/include/Axel/axel-config.h"
+                  @ONLY IMMEDIATE)
+ 
+-install ( FILES "${CMAKE_BINARY_DIR}/for_installer/include/axel-config.h"
+-          DESTINATION include)
++install ( FILES "${CMAKE_BINARY_DIR}//include/Axel/axel-config.h"
++          DESTINATION include/Axel)
+ endif(BUILD_FOR_RELEASE)
+ ######################################################################
+ # Update

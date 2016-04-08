@@ -16,21 +16,22 @@ IUSE=""
 
 SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
-RDEPEND="~sci-libs/dtk-${PV}"
+RDEPEND="~sci-libs/dtk-${PV}
+	~sci-mathematics/axel-${PV}
+	>=sci-libs/vtk-6.0.0"
 DEPEND="${RDEPEND}"
 
-src_prepare() {
-	epatch "${FILESDIR}/CMakeLists-${PV}.txt.patch"
-	cp "${FILESDIR}/AxelConfig-${PV}.install.cmake.in" \
-		"${S}/cmake/install-AxelConfig.cmake.in" || \
-		die "Could not copy 'AxelConfig-${PV}.install.cmake.in' to '${S}/cmake/'"
-}
+#src_prepare() {
+#	epatch "${FILESDIR}/CMakeLists-${PV}.txt.patch"
+#}
 
 src_configure() {
 	#append-cxxflags -std=c++11
 	local mycmakeargs=(
-		-DDTK_USED=ON
-		-DBUILD_FOR_RELEASE=ON
+		-DAXL=ON
+		-DAXEL_USED=ON
+		#-DDTK_USED=ON
+		-DVTKVIEW_USED=ON
 	)
 	cmake-utils_src_configure
 }
