@@ -21,9 +21,10 @@ RDEPEND="~sci-libs/dtk-${PV}
 	>=sci-libs/vtk-6.0.0"
 DEPEND="${RDEPEND}"
 
-#src_prepare() {
-#	epatch "${FILESDIR}/CMakeLists-${PV}.txt.patch"
-#}
+src_prepare() {
+	epatch "${FILESDIR}/CMakeLists-${PV}.txt.patch"
+	epatch "${FILESDIR}/axlVtkView-CMakeLists-${PV}.txt.patch"
+}
 
 src_configure() {
 	#append-cxxflags -std=c++11

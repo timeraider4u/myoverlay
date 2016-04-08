@@ -1,5 +1,5 @@
---- CMakeLists.txt.orig	2016-04-08 01:59:40.180003981 +0200
-+++ CMakeLists.txt	2016-04-08 02:05:42.486988828 +0200
+--- CMakeLists.txt.orig	2016-04-08 15:54:25.649784209 +0200
++++ CMakeLists.txt	2016-04-08 15:58:30.460773970 +0200
 @@ -139,7 +139,7 @@
  ENDIF (DEBUG)
  
@@ -9,7 +9,7 @@
  ENDIF (OPTIMIZE)
  
  set(AXEL_CXX_FLAGS  "${AXEL_CXX_FLAGS} -ftemplate-depth-150")
-@@ -309,18 +309,22 @@
+@@ -309,18 +309,32 @@
  ####################################################################
  if(BUILD_FOR_RELEASE)
  configure_file ( "${PROJECT_SOURCE_DIR}/cmake/install-AxelConfig.cmake.in"
@@ -35,6 +35,31 @@
 +          DESTINATION include/axlCore)
 +install ( FILES "${CMAKE_BINARY_DIR}/src/axlGui/axlGuiExport.h"
 +          DESTINATION include/axlGui)
++
++install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/axlCore"
++        DESTINATION include/
++        FILES_MATCHING PATTERN "*.h"
++)
++install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/axlGui
++        DESTINATION include/
++        FILES_MATCHING PATTERN "*.h"
++)
++
  endif(BUILD_FOR_RELEASE)
  ######################################################################
  # Update
+@@ -329,3 +343,14 @@
+                   COMMAND git pull origin master
+                   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                   COMMENT "update the package ${PROJECT_NAME}")
++
++MESSAGE(STATUS "<<< Gentoo configuration >>>
++Build type      ${CMAKE_BUILD_TYPE}
++Install path    ${CMAKE_INSTALL_PREFIX}
++Compiler flags:
++C               ${CMAKE_C_FLAGS}
++C++             ${CMAKE_CXX_FLAGS}
++Linker flags:
++Executable      ${CMAKE_EXE_LINKER_FLAGS}
++Module          ${CMAKE_MODULE_LINKER_FLAGS}
++Shared          ${CMAKE_SHARED_LINKER_FLAGS}\n")
