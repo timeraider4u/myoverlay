@@ -19,11 +19,18 @@ SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz -> ${P}.tar.
 RDEPEND="~sci-libs/dtk-${PV}"
 DEPEND="${RDEPEND}"
 
+#AXEL_DATA_DIR="/usr/share/axel/data"
+AXEL_PLUGINS_DIR="/usr/lib/axel-plugins"
+
 src_prepare() {
 	epatch "${FILESDIR}/CMakeLists-${PV}.txt.patch"
-	cp "${FILESDIR}/AxelConfig-${PV}.install.cmake.in" \
+	cp "${FILESDIR}/install-AxelConfig-${PV}.cmake.in" \
 		"${S}/cmake/install-AxelConfig.cmake.in" || \
-		die "Could not copy 'AxelConfig-${PV}.install.cmake.in' to '${S}/cmake/'"
+		die "Could not copy 'install-AxelConfig-${PV}.cmake.in' to '${S}/cmake/'"
+	#cp "${FILESDIR}/install-axel-config-${PV}.h.in" \
+	#	"${S}/cmake/install-axel-config.h.in" || \
+	#	die "Could not copy 'install-axel-config-${PV}.h.in' to '${S}/cmake/'"
+	epatch "${FILESDIR}/install-axel-config-${PV}.h.in"
 }
 
 src_configure() {
@@ -31,6 +38,15 @@ src_configure() {
 	local mycmakeargs=(
 		-DDTK_USED=ON
 		-DBUILD_FOR_RELEASE=ON
+		-Daxel-sdk_VERSION_MAJOR=2
+		-Daxel-sdk_VERSION_MINOR=4
+		-Daxel-sdk_VERSION_PATCH=0
 	)
 	cmake-utils_src_configure
+}
+
+src_install() {
+	cmake-utils_src_install
+	dodir "${AXEL_PLUGINS_DIR}"
+	keepdir "${AXEL_PLUGINS_DIR}"
 }
