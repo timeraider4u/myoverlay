@@ -244,7 +244,6 @@ src_configure() {
 	)
 
 	mycmakeargs+=(
-		
 		-DVTK_USE_BOOST="$(usex boost)"
 		-DVTK_USE_CG_SHADERS="$(usex cg)"
 		-DVTK_USE_ODBC="$(usex odbc)"
