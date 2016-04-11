@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 PYTHON_COMPAT=( python2_7 )
 CMAKE_MAKEFILE_GENERATOR=ninja
@@ -26,6 +26,7 @@ SRC_URI="
 	"
 
 LICENSE="BSD LGPL-2"
+#KEYWORDS="~arm ~x86 ~amd64-linux ~x86-linux"
 KEYWORDS="~amd64 ~x86"
 SLOT="0"
 IUSE="
@@ -134,6 +135,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-web.patch
 	"${FILESDIR}"/${P}-glext.patch
 	"${FILESDIR}"/${P}-memset.patch
+	"${FILESDIR}"/${P}-gdal2.patch
 	)
 
 RESTRICT=test
@@ -221,48 +223,49 @@ src_configure() {
 	)
 
 	mycmakeargs+=(
-		$(cmake-utils_use_build doc DOCUMENTATION)
-		$(cmake-utils_use_build examples EXAMPLES)
-		$(cmake-utils_use_build test VTK_BUILD_ALL_MODULES_FOR_TESTS)
-		$(cmake-utils_use all-modules VTK_BUILD_ALL_MODULES)
-		$(cmake-utils_use doc DOCUMENTATION_HTML_HELP)
-		$(cmake-utils_use imaging VTK_Group_Imaging)
-		$(cmake-utils_use mpi VTK_Group_MPI)
-		#$(cmake-utils_use qt4 VTK_Group_Qt)
-
-		$(cmake-utils_use rendering VTK_Group_Rendering)
-		$(cmake-utils_use tk VTK_Group_Tk)
-		$(cmake-utils_use views VTK_Group_Views)
-		$(cmake-utils_use web VTK_Group_Web)
-		$(cmake-utils_use web VTK_WWW_DIR="${ED}/${MY_HTDOCSDIR}")
-		$(cmake-utils_use java VTK_WRAP_JAVA)
-		$(cmake-utils_use python VTK_WRAP_PYTHON)
-		$(cmake-utils_use python VTK_WRAP_PYTHON_SIP)
-		$(cmake-utils_use tcl VTK_WRAP_TCL)
+		-DBUILD_DOCUMENTATION="$(usex doc)"
+		-DBUILD_EXAMPLES="$(usex examples)"
+		-DBUILD_VTK_BUILD_ALL_MODULES_FOR_TESTS="$(usex test)"
+		-DVTK_BUILD_ALL_MODULES="$(usex all-modules)"
+		-DDOCUMENTATION_HTML_HELP="$(usex doc)"
+		-DVTK_Group_Imaging="$(usex imaging)"
+		-DVTK_Group_MPI="$(usex mpi)"
+		-DVTK_Group_Qt="$(usex qt4)"
+		-DVTK_Group_Rendering="$(usex rendering)"
+		-DVTK_Group_Tk="$(usex tk)"
+		-DVTK_Group_Views="$(usex views)"
+		-DVTK_Group_Web="$(usex web)"
+		# How to convert this to EAPI 6???
+		#$(cmake-utils_use web VTK_WWW_DIR="${ED}/${MY_HTDOCSDIR}")
+		-DVTK_WRAP_JAVA="$(usex java)"
+		-DVTK_WRAP_PYTHON="$(usex python)"
+		-DVTK_WRAP_PYTHON_SIP="$(usex python)"
+		-DVTK_WRAP_TCL="$(usex tcl)"
 	)
 
 	mycmakeargs+=(
-		$(cmake-utils_use boost VTK_USE_BOOST)
-		$(cmake-utils_use cg VTK_USE_CG_SHADERS)
-		$(cmake-utils_use odbc VTK_USE_ODBC)
-		$(cmake-utils_use offscreen VTK_USE_OFFSCREEN)
-		$(cmake-utils_use offscreen VTK_OPENGL_HAS_OSMESA)
-		$(cmake-utils_use smp vtkFiltersSMP)
-		$(cmake-utils_use theora VTK_USE_OGGTHEORA_ENCODER)
-		$(cmake-utils_use video_cards_nvidia VTK_USE_NVCONTROL)
-		$(cmake-utils_use R Module_vtkFiltersStatisticsGnuR)
-		$(cmake-utils_use X VTK_USE_X)
+		
+		-DVTK_USE_BOOST="$(usex boost)"
+		-DVTK_USE_CG_SHADERS="$(usex cg)"
+		-DVTK_USE_ODBC="$(usex odbc)"
+		-DVTK_USE_OFFSCREEN="$(usex offscreen)"
+		-DVTK_OPENGL_HAS_OSMESA="$(usex offscreen)"
+		-DvtkFiltersSMP="$(usex smp)"
+		-DVTK_USE_OGGTHEORA_ENCODER="$(usex theora)"
+		-DVTK_USE_NVCONTROL="$(usex video_cards_nvidia)"
+		-DModule_vtkFiltersStatisticsGnuR="$(usex R)"
+		-DVTK_USE_X="$(usex X)"
 	)
 
 	# IO
 	mycmakeargs+=(
-		$(cmake-utils_use ffmpeg VTK_USE_FFMPEG_ENCODER)
-		$(cmake-utils_use gdal Module_vtkIOGDAL)
-		$(cmake-utils_use json Module_vtkIOGeoJSON)
-		$(cmake-utils_use xdmf2 Module_vtkIOXdmf2)
+		-DVTK_USE_FFMPEG_ENCODER="$(usex ffmpeg)"
+		-DModule_vtkIOGDAL="$(usex gdal)"
+		-DModule_vtkIOGeoJSON="$(usex json)"
+		-DModule_vtkIOXdmf2="$(usex xdmf2)"
 	)
 	# Apple stuff, does it really work?
-	mycmakeargs+=( $(cmake-utils_use aqua VTK_USE_COCOA) )
+	mycmakeargs+=( -DVTK_USE_COCOA="$(usex aqua)" )
 
 	if use examples || use test; then
 		mycmakeargs+=( -DBUILD_TESTING=ON )
@@ -330,18 +333,14 @@ src_configure() {
 			-DVTK_USE_QVTK_QTOPENGL=ON
 			-DQT_WRAP_CPP=ON
 			-DQT_WRAP_UI=ON
-			-DVTK_QT_VERSION:STRING=5
-			#-DQT_QMAKE_EXECUTABLE:PATH=/opt/Qt5.5.0/5.5/gcc_64/bin/qmake
-			-DVTK_Group_Qt:BOOL=ON
-			#-DCMAKE_PREFIX_PATH:PATH=/opt/Qt5.5.0/5.5/gcc_64/lib/cmake
-			-DBUILD_SHARED_LIBS:BOOL=ON
-			-DVTK_INSTALL_QT_DIR=/$(get_libdir)/qt5/plugins/designer/
+			-DVTK_INSTALL_QT_DIR=/$(get_libdir)/qt5/plugins/designer
 			-DDESIRED_QT_VERSION=5
 			-DVTK_QT_VERSION=5
 			-DQT_MOC_EXECUTABLE="$(qt5_get_bindir)/moc"
 			-DQT_UIC_EXECUTABLE="$(qt5_get_bindir)/uic"
 			-DQT_INCLUDE_DIR="${EPREFIX}/usr/include/qt5"
-			#-DQT_QMAKE_EXECUTABLE="/opt/Qt5.5.0/5.5/gcc_64/bin/qmake"
+			-DQT_QMAKE_EXECUTABLE="$(qt5_get_bindir)/qmake"
+			-DVTK_Group_Qt:BOOL=ON
 		)
 	fi
 

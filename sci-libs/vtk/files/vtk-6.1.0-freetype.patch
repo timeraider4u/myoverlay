@@ -1,5 +1,5 @@
---- a/ParaView-v4.2.0-source/VTK/Rendering/FreeType/vtkFreeTypeTools.cxx_orig	2014-12-23 09:25:35.000000000 +0100
-+++ b/ParaView-v4.2.0-source/VTK/Rendering/FreeType/vtkFreeTypeTools.cxx	2014-12-24 09:40:31.886953389 +0100
+--- a/Rendering/FreeType/vtkFreeTypeTools.cxx_orig	2014-12-23 09:25:35.000000000 +0100
++++ b/Rendering/FreeType/vtkFreeTypeTools.cxx	2014-12-24 09:40:31.886953389 +0100
 @@ -1185,7 +1185,7 @@
      if (bitmap)
        {

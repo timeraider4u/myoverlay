@@ -1,6 +1,6 @@
 diff -up VTK-6.1.0/Rendering/OpenGL/vtkOpenGL.h.glext VTK-6.1.0/Rendering/OpenGL/vtkOpenGL.h
---- VTK-6.1.0/Rendering/OpenGL/vtkOpenGL.h.glext	2014-01-22 08:55:41.000000000 -0700
-+++ VTK-6.1.0/Rendering/OpenGL/vtkOpenGL.h	2014-11-19 10:27:12.349345199 -0700
+--- a/Rendering/OpenGL/vtkOpenGL.h.glext	2014-01-22 08:55:41.000000000 -0700
++++ b/Rendering/OpenGL/vtkOpenGL.h	2014-11-19 10:27:12.349345199 -0700
 @@ -19,7 +19,8 @@
  #include "vtkConfigure.h"
  

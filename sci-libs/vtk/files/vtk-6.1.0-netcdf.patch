@@ -1,6 +1,6 @@
 diff -up VTK/ThirdParty/netcdf/CMakeLists.txt.netcdf VTK/ThirdParty/netcdf/CMakeLists.txt
---- VTK/ThirdParty/netcdf/CMakeLists.txt.netcdf	2013-12-27 20:29:11.644289659 -0700
-+++ VTK/ThirdParty/netcdf/CMakeLists.txt	2013-12-27 20:33:48.071895769 -0700
+--- a/ThirdParty/netcdf/CMakeLists.txt.netcdf	2013-12-27 20:29:11.644289659 -0700
++++ b/ThirdParty/netcdf/CMakeLists.txt	2013-12-27 20:33:48.071895769 -0700
 @@ -1,10 +1,18 @@
 -vtk_module_third_party(NetCDF
 -  LIBRARIES vtkNetCDF vtkNetCDF_cxx
