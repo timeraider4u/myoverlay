@@ -8,7 +8,7 @@ inherit cmake-utils vcs-snapshot
 
 DESCRIPTION="Qt password manager compatible with its Win32 and Pocket PC versions"
 HOMEPAGE="http://www.keepassx.org/"
-SRC_URI="https://github.com/droidmonkey/keepassx_http/archive/2.0.2.tar.gz"
+SRC_URI="https://github.com/timeraider4u/keepassx_http/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="|| ( GPL-2 GPL-3 ) BSD GPL-2 LGPL-2.1 LGPL-3+ CC0-1.0 public-domain || ( LGPL-2.1 GPL-3 )"
 SLOT="0"
