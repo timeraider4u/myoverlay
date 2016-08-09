@@ -11,7 +11,7 @@ inherit distutils-r1
 
 DESCRIPTION="Ebuild upstream scan utility"
 HOMEPAGE="http://euscan.gentooexperimental.org/"
-SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz"
+SRC_URI="https://github.com/timeraider4u/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
