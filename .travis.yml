@@ -36,4 +36,4 @@ script:
     #- sudo -E su $USER -c 'pwd'
     #- sudo -E su $USER -c 'ls -la ./'
     #- sudo -E su $USER -c 'ls -la ./../'
-    #- sudo -E su $USER -c './ebuild-testing.sh'
+    #- sudo -E su $USER -c './scripts/ebuild-testing.sh'
