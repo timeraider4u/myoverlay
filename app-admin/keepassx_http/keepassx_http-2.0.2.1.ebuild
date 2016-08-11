@@ -16,28 +16,28 @@ SLOT="0"
 KEYWORDS="amd64 ~arm ~ppc ~x86 ~amd64-linux ~x86-linux"
 IUSE="test"
 DEPEND="
-        dev-libs/libgcrypt:0=
-        dev-libs/qjson
-        dev-qt/qtcore:5
-        dev-qt/qtgui:5
-        dev-qt/qttest:5
-        net-libs/libmicrohttpd
-        sys-libs/zlib
-        x11-libs/libX11
-        x11-libs/libXtst
+	dev-libs/libgcrypt:0=
+	dev-libs/qjson
+	dev-qt/qtcore:5
+	dev-qt/qtgui:5
+	dev-qt/qttest:5
+	net-libs/libmicrohttpd
+	sys-libs/zlib
+	x11-libs/libX11
+	x11-libs/libXtst
 "
 RDEPEND="${DEPEND}"
 
 DOCS=(CHANGELOG)
 
 src_unpack() {
-        unpack "${A}"
-        #mv "${WORKDIR}/2.0.2" "${S}" || die "Could not move directory"
+	unpack ${A}
+	#mv "${WORKDIR}/2.0.2" "${S}" || die "Could not move directory"
 }
 
 src_configure() {
-        local mycmakeargs=(
-                -DWITH_TESTS="$(usex test)"
-		)
-		cmake-utils_src_configure
+	local mycmakeargs=(
+		-DWITH_TESTS="$(usex test)"
+	)
+	cmake-utils_src_configure
 }
