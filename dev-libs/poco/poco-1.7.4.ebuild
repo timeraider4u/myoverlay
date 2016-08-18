@@ -4,9 +4,9 @@
 
 EAPI="6"
 
-inherit eutils toolchain-funcs flag-o-matic multilib 
+inherit eutils toolchain-funcs flag-o-matic multilib
 
-DESCRIPTION="C++ class libraries to simplify the development of network-centric, portable applications"
+DESCRIPTION="C++ class libs to simplify network-centric, portable app development"
 HOMEPAGE="http://pocoproject.org/"
 SRC_URI="https://github.com/pocoproject/poco/archive/${P}-release.tar.gz"
 LICENSE="Boost-1.0"
@@ -20,12 +20,12 @@ DEPEND=">=dev-libs/libpcre-8.13
 	mysql? ( virtual/mysql )
 	odbc? ( iodbc? ( dev-db/libiodbc )
 		!iodbc? ( dev-db/unixODBC ) )
-	ssl? ( dev-libs/openssl )
+	ssl? ( dev-libs/openssl:0 )
 	sqlite? ( dev-db/sqlite:3 )"
 RDEPEND="${DEPEND}"
 
 src_unpack() {
-	unpack "${A}"
+	unpack ${A}
 	local MYDIR="${WORKDIR}/${PN}-${P}-release"
 	mv "${MYDIR}" "${S}" || \
 		die "Could not move dir '${MYDIR}' to '${S}'"
@@ -36,7 +36,6 @@ src_prepare() {
 		"${FILESDIR}"/${P}-gentoo.patch \
 	#	"${FILESDIR}"/${P}-odbc.patch \
 	#	"${FILESDIR}"/poco-1.4.4-patch-for-libpcre-8.32.patch
-	
 	eapply_user
 }
 
