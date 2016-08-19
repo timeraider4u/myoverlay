@@ -19,8 +19,8 @@ SERVER="loolwsd"
 
 SRC_URI="https://github.com/LibreOffice/online/archive/${PV}${MIN}.tar.gz -> ${P}.tar.gz"
 
-RDEPEND="dev-libs/poco
-		media-libs/libpng
+RDEPEND=">=dev-libs/poco-1.7.4
+		media-libs/libpng:0
 		sys-libs/libcap"
 DEPEND="${RDEPEND}"
 
