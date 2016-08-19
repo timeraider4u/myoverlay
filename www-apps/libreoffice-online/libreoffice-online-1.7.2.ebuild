@@ -65,4 +65,5 @@ src_install() {
 	# --o:file_server_root_path
 	# start /usr/bin/loolwsd
 	# libreoffice[odk]???
+	# set lo_template_path to /usr/lib64/libreoffice
 }
