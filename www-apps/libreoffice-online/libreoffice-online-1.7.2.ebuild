@@ -66,4 +66,7 @@ src_install() {
 	# start /usr/bin/loolwsd
 	# libreoffice[odk]???
 	# set lo_template_path to /usr/lib64/libreoffice
+	# see loolwsd/debian/loolwsd.postinst for more installation hints
+	# su - lool -c mkdir /home/lool/systemplate
+	# su - lool -c loolwsd-systemplate-setup ./systemplate /usr/lib64/libreoffice/
 }
