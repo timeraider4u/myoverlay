@@ -4,7 +4,7 @@
 
 EAPI=6
 
-inherit autotools eutils
+inherit autotools eutils user
 
 DESCRIPTION="LibreOffice on-line."
 HOMEPAGE="https://www.collaboraoffice.com/"
@@ -16,55 +16,77 @@ IUSE=""
 
 MIN="-1"
 SERVER="loolwsd"
+JS="loleaflet"
 
 SRC_URI="https://github.com/LibreOffice/online/archive/${PV}${MIN}.tar.gz -> ${P}.tar.gz"
 
-RDEPEND=">=dev-libs/poco-1.7.4
+# libreoffice[odk]???
+RDEPEND=">=app-office/libreoffice-5.2
+		>=dev-libs/poco-1.7.4
+		dev-python/polib
 		media-libs/libpng:0
+		net-libs/nodejs
 		sys-libs/libcap"
 DEPEND="${RDEPEND}"
+
+pkg_setup() {
+	local MYPATH="var/lib/libreoffice-online"
+	enewuser lool -1 -1 "/${MYPATH}/home" -1
+}
 
 src_unpack() {
 	unpack ${A}
 	local MYPATH="${WORKDIR}/online-${PV}${MIN}/"
-	mv "${MYPATH}" "${S}" || die "Could not move directory"
+	mv "${MYPATH}" "${S}" || die "Could not move directory '${MYPATH}' to '${S}'"
 }
 
 src_prepare() {
-	# server component only (at the moment)
-	cd "${S}/${SERVER}" || die "Could not change dir to '${S}/${SERVER}'"
-	epatch "${FILESDIR}/${P}-Makefile.am.patch"
+	epatch "${FILESDIR}/${P}-${SERVER}-Makefile.am.patch"
+	epatch "${FILESDIR}/${P}-${JS}-Makefile.patch"
 	eapply_user
 }
 
 src_configure() {
-	# server component only (at the moment)
 	cd "${S}/${SERVER}" || die "Could not change dir to '${S}/${SERVER}'"
-	local myeconfargs=(
-		--with-lokit-path="${S}/${SERVER}/bundled/include/"
-		# $(use_enable foo)
+	local myeconfargs=( \
+		--with-lokit-path="${S}/${SERVER}/bundled/include/" \
+		# $(use_enable foo) \
 	)
 	eautoreconf
 	econf ${myeconfargs}
 }
 
 src_compile() {
-	# server component only (at the moment)
+	# compile server component
+	elog "Building ${SERVER}"
 	cd "${S}/${SERVER}" || die "Could not change dir to '${S}/${SERVER}'"
 	emake
+	# compile JavaScript component
+	elog "Building ${JS}"
+	cd "${S}/${JS}" || die "Could not change dir to '${S}/${JS}'"
+	emake dist
 }
 
 src_install() {
-	# server component only (at the moment)
+	# install server component
 	cd "${S}/${SERVER}" || die "Could not change dir to '${S}/${SERVER}'"
 	emake DESTDIR="${D}" install
-	# add user 'lool' ???
-	# mdir /var/lib/cache/loolwsd/
-	# mkdir /usr/bin/jails/
-	# mkdir loleaflet
-	# --o:file_server_root_path
+	# install JavaScript component
+	local MYPATH="var/lib/libreoffice-online"
+	local MYPATH_JS="${MYPATH}/${JS}"
+	dodir "/${MYPATH_JS}"
+	cp -R "${S}/${JS}/${JS}-${PV}/dist"/* "${D}/${MYPATH_JS}" || die \
+		"could not copy '${S}/${JS}/${JS}-${PV}/' to '${D}/${MYPATH_JS}'"
+	# prepare other things
+	
+	dodir "/${MYPATH}/cache"
+	fowners lool "/${MYPATH}/cache"
+	dodir "/${MYPATH}/home"
+	fowners lool "/${MYPATH}/home"
+	dodir "/${MYPATH}/jails"
+	fowners lool "/${MYPATH}/jails"
+	fperms 0700 "/${MYPATH}/jails"
 	# start /usr/bin/loolwsd
-	# libreoffice[odk]???
 	# set lo_template_path to /usr/lib64/libreoffice
 	# see loolwsd/debian/loolwsd.postinst for more installation hints
 	# su - lool -c mkdir /home/lool/systemplate
