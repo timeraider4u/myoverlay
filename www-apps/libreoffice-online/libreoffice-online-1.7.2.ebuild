@@ -31,7 +31,8 @@ DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	local MYPATH="var/lib/libreoffice-online"
-	enewuser lool -1 -1 "/${MYPATH}/home" -1
+	enewgroup www-data
+	enewuser lool -1 -1 "/${MYPATH}/home" "www-data"
 }
 
 src_unpack() {
@@ -80,11 +81,11 @@ src_install() {
 	# prepare other things
 	
 	dodir "/${MYPATH}/cache"
-	fowners lool "/${MYPATH}/cache"
+	fowners lool:www-data "/${MYPATH}/cache"
 	dodir "/${MYPATH}/home"
-	fowners lool "/${MYPATH}/home"
+	fowners lool:www-data "/${MYPATH}/home"
 	dodir "/${MYPATH}/jails"
-	fowners lool "/${MYPATH}/jails"
+	fowners lool:www-data "/${MYPATH}/jails"
 	fperms 0700 "/${MYPATH}/jails"
 	# start /usr/bin/loolwsd
 	# set lo_template_path to /usr/lib64/libreoffice
