@@ -17,6 +17,8 @@ IUSE=""
 MIN="-1"
 SERVER="loolwsd"
 JS="loleaflet"
+MYUSER="lool"
+MYGROUP="www-data"
 
 SRC_URI="https://github.com/LibreOffice/online/archive/${PV}${MIN}.tar.gz -> ${P}.tar.gz"
 
@@ -31,8 +33,8 @@ DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	local MYPATH="var/lib/libreoffice-online"
-	enewgroup www-data
-	enewuser lool -1 -1 "/${MYPATH}/home" "www-data"
+	enewgroup "${MYGROUP}"
+	enewuser "${MYUSER}" -1 -1 "/${MYPATH}/home" "${MGROUP}"
 }
 
 src_unpack() {
@@ -81,15 +83,31 @@ src_install() {
 	# prepare other things
 	
 	dodir "/${MYPATH}/cache"
-	fowners lool:www-data "/${MYPATH}/cache"
+	fowners "${MYUSER}:${MGROUP}" "/${MYPATH}/cache"
 	dodir "/${MYPATH}/home"
-	fowners lool:www-data "/${MYPATH}/home"
+	fowners "${MYUSER}:${MGROUP}" "/${MYPATH}/home"
 	dodir "/${MYPATH}/jails"
-	fowners lool:www-data "/${MYPATH}/jails"
+	fowners "${MYUSER}:${MGROUP}" "/${MYPATH}/jails"
 	fperms 0700 "/${MYPATH}/jails"
-	# start /usr/bin/loolwsd
+	dodir "/${MYPATH}/systemplate"
+	fowners "${MYUSER}:${MGROUP}" "/${MYPATH}/systemplate"
+	# move /usr/bin/... /usr/sbin/ ???
+	# start /usr/bin/${MYUSER}wsd
 	# set lo_template_path to /usr/lib64/libreoffice
-	# see loolwsd/debian/loolwsd.postinst for more installation hints
-	# su - lool -c mkdir /home/lool/systemplate
-	# su - lool -c loolwsd-systemplate-setup ./systemplate /usr/lib64/libreoffice/
+	# see ${MYUSER}wsd/debian/${MYUSER}wsd.postinst for more installation hints
+	# su - ${MYUSER} -c mkdir /home/${MYUSER}/systemplate
+	# su - ${MYUSER} -c ${MYUSER}wsd-systemplate-setup ./systemplate /usr/lib64/libreoffice/
+}
+
+pkg_postinst() {
+	local MYPATH="var/lib/libreoffice-online" 
+	/usr/bin/loolwsd-systemplate-setup \
+		"/${MYPATH}/systemplate" \
+		"/usr/lib64/libreoffice/"
+#	elog "su -l ${MYUSER} -s /bin/bash -c '/usr/bin/loolwsd-systemplate-setup" \
+#		"/${MYPATH}/systemplate" \
+#		"/usr/lib64/libreoffice/'"
+#	su -l "${MYUSER}" -s /bin/bash -c "/usr/bin/loolwsd-systemplate-setup" \
+#		"/${MYPATH}/systemplate" \
+#		"/usr/lib64/libreoffice/"
 }
