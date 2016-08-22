@@ -45,6 +45,7 @@ src_unpack() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-${SERVER}-Makefile.am.patch"
+	epatch "${FILESDIR}/${P}-${SERVER}-LOOLKit.cpp.patch"
 	epatch "${FILESDIR}/${P}-${JS}-Makefile.patch"
 	eapply_user
 }
@@ -97,6 +98,13 @@ src_install() {
 	# see ${MYUSER}wsd/debian/${MYUSER}wsd.postinst for more installation hints
 	# su - ${MYUSER} -c mkdir /home/${MYUSER}/systemplate
 	# su - ${MYUSER} -c ${MYUSER}wsd-systemplate-setup ./systemplate /usr/lib64/libreoffice/
+	## RC script ##
+    #    newinitd "${FILESDIR}/${PN}.init" "${PN}"
+    #    newconfd "${FILESDIR}/${PN}.conf" "${PN}"
+    local LOGDIR="/var/log/libreoffice-online/"
+    dodir "${LOGDIR}"
+    fowners "${MYUSER}:${MGROUP}" "${LOGDIR}"
+
 }
 
 pkg_postinst() {
