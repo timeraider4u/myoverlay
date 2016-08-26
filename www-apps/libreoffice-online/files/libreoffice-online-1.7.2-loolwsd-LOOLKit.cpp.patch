@@ -1,11 +1,11 @@
 --- loolwsd/LOOLKit.cpp.orig	2016-08-21 19:30:01.255761592 +0200
-+++ loolwsd/LOOLKit.cpp	2016-08-21 20:22:39.966629485 +0200
-@@ -105,6 +105,59 @@
++++ loolwsd/LOOLKit.cpp	2016-08-22 17:57:20.158910005 +0200
+@@ -105,6 +105,65 @@
              return true;
          }
      }
 +    
-+	int filecopy(FILE *dest, FILE *src)
++	int filecopy(FILE *src, FILE *dest)
 +	{
 +		const int size = 16384;
 +		char buffer[size];
@@ -28,7 +28,7 @@
 +		return 0;
 +	}
 +
-+	int fileopen_and_copy(const char * dest, const char * src)
++	int fileopen_and_copy(const char * src, const char * dest)
 +	{
 +		FILE * infile  = fopen(src,  "rb");
 +		FILE * outfile = fopen(dest, "wb");
@@ -36,7 +36,7 @@
 +		if (ferror(infile)) { return -1; }
 +		if (ferror(outfile)) { return -1; }
 +		
-+		if (filecopy(outfile, infile) == -1) {
++		if (filecopy(infile, outfile) == -1) {
 +			return -1;
 +		}
 +		
@@ -45,22 +45,28 @@
 +		return 0;
 +	}
 +	
-+	int link_or_copy_file(const char * src, const char * dest) {
++	int link_or_copy_file(const char * target, const char * linkpath) {
 +		int result = -1;
 +		const bool hardLinkFile = true;
 +		if (hardLinkFile)  {
-+			//result = link(src, dest);
-+			result = symlink(dest, src);
++			result = link(target, linkpath);
++			//result = symlink(target, linkpath);
++			// continue when the file/symlink already exists
++			if ((result == -1) && (errno == EEXIST)) {
++				Log::trace("link(\"" + std::string(target) + "\",\"" + linkpath +
++			               "\") already exists. Continuing.");
++				return 0;
++			}
 +		}
 +		else {
-+			result = fileopen_and_copy(dest, src);
++			result = fileopen_and_copy(target, linkpath);
 +		}
 +		return result;
 +	}
  
      int linkOrCopyFunction(const char *fpath,
                             const struct stat* /*sb*/,
-@@ -123,7 +176,7 @@
+@@ -123,7 +182,7 @@
          case FTW_F:
          case FTW_SLN:
              File(newPath.parent()).createDirectories();

@@ -4,7 +4,7 @@
 
 EAPI=6
 
-inherit autotools eutils user
+inherit autotools eutils fcaps user
 
 DESCRIPTION="LibreOffice on-line."
 HOMEPAGE="https://www.collaboraoffice.com/"
@@ -19,6 +19,15 @@ SERVER="loolwsd"
 JS="loleaflet"
 MYUSER="lool"
 MYGROUP="www-data"
+PROG1="/usr/bin/loolforkit"
+PROG2="/usr/bin/loolmount"
+PROG3="/usr/bin/loolwsd-systemplate-setup"
+
+# set-caps taken from loolwsd-Makefile
+FILECAPS=(
+	cap_fowner,cap_mknod,cap_sys_chroot=ep "${PROG1}" --
+	cap_sys_admin=ep "${PROG2}"
+)
 
 SRC_URI="https://github.com/LibreOffice/online/archive/${PV}${MIN}.tar.gz -> ${P}.tar.gz"
 
@@ -90,28 +99,35 @@ src_install() {
 	dodir "/${MYPATH}/jails"
 	fowners "${MYUSER}:${MGROUP}" "/${MYPATH}/jails"
 	fperms 0700 "/${MYPATH}/jails"
-	dodir "/${MYPATH}/systemplate"
-	fowners "${MYUSER}:${MGROUP}" "/${MYPATH}/systemplate"
+	#dodir "/${MYPATH}/systemplate"
+	#fowners "${MYUSER}:${MGROUP}" "/${MYPATH}/systemplate"
 	# move /usr/bin/... /usr/sbin/ ???
-	# start /usr/bin/${MYUSER}wsd
+	# start /usr/bin/loolwsd
 	# set lo_template_path to /usr/lib64/libreoffice
-	# see ${MYUSER}wsd/debian/${MYUSER}wsd.postinst for more installation hints
-	# su - ${MYUSER} -c mkdir /home/${MYUSER}/systemplate
-	# su - ${MYUSER} -c ${MYUSER}wsd-systemplate-setup ./systemplate /usr/lib64/libreoffice/
+	# see loolwsd/debian/lool.postinst for more installation hints
+	# su - ${MYUSER} -c mkdir /home/lool/systemplate
+	# su - ${MYUSER} -c loolwsd-systemplate-setup ./systemplate /usr/lib64/libreoffice/
 	## RC script ##
-    #    newinitd "${FILESDIR}/${PN}.init" "${PN}"
-    #    newconfd "${FILESDIR}/${PN}.conf" "${PN}"
-    local LOGDIR="/var/log/libreoffice-online/"
-    dodir "${LOGDIR}"
-    fowners "${MYUSER}:${MGROUP}" "${LOGDIR}"
-
+	#    newinitd "${FILESDIR}/${PN}.init" "${PN}"
+	#    newconfd "${FILESDIR}/${PN}.conf" "${PN}"
+	local LOGDIR="/var/log/libreoffice-online/"
+	dodir "${LOGDIR}"
+	fowners "${MYUSER}:${MGROUP}" "${LOGDIR}"
 }
 
 pkg_postinst() {
-	local MYPATH="var/lib/libreoffice-online" 
+	elog "Set required capabilities for '${PROG1}' and '${PROG2}'"
+	fcaps_pkg_postinst
+	local SYS="/var/lib/libreoffice-online/systemplate"
+	elog "Creating and populating '${SYS}'"
+	rm -Rf "${SYS}" || \
+		die "Could not clean '${SYS}'"
 	/usr/bin/loolwsd-systemplate-setup \
-		"/${MYPATH}/systemplate" \
-		"/usr/lib64/libreoffice/"
+		"${SYS}" \
+		"/usr/lib64/libreoffice/" \
+		|| die "Could not execute '${PROG3}"\
+			"${SYS}" \
+			"/usr/lib64/libreoffice/'"
 #	elog "su -l ${MYUSER} -s /bin/bash -c '/usr/bin/loolwsd-systemplate-setup" \
 #		"/${MYPATH}/systemplate" \
 #		"/usr/lib64/libreoffice/'"
