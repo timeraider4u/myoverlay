@@ -1,0 +1,11 @@
+--- /home/adalgrim/weiner/Makefile	2016-09-05 14:50:08.952818349 +0200
++++ /home/adalgrim/weiner/Makefile.new	2016-09-05 14:52:16.245934651 +0200
+@@ -17,7 +17,7 @@
+ 
+ .PHONY: all build install clean uninstall
+ 
+-PREFIX=/usr/local
++PREFIX=/usr
+ DESTDIR=
+ 
+ all: build
