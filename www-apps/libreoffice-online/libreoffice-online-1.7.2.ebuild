@@ -39,7 +39,7 @@ RDEPEND=">=app-office/libreoffice-5.2
 		net-libs/nodejs
 		sys-libs/libcap"
 DEPEND="${RDEPEND}
-		dev-util/jake:0"
+		>=dev-nodejs/jake-8.0.12"
 
 pkg_setup() {
 	local MYPATH="var/lib/libreoffice-online"
