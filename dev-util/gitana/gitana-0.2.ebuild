@@ -22,7 +22,7 @@ KEYWORDS="~amd64 ~x86"
 # problem with https://github.com/SOM-Research/Gitana/issues/5
 # wait for release and update version of git-python as soon as possible
 
-DEPEND=">=dev-lang/python-2.7.6
+DEPEND="dev-lang/python:2.7
 	dev-python/mysql-connector-python:0
 	dev-python/networkx:0
 	dev-python/git-python:0
