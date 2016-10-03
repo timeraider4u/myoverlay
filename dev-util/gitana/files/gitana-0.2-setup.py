@@ -20,9 +20,15 @@ setup(name='gitana',
 	description='SQL-based Git Repository Inspector',
 	long_description='Gitana exports and digests the data of a Git repository, issue trackers and Q&A web-sites to a relational database in order to ease browsing and querying activities with standard SQL syntax and tools.',
 	keywords='Gitana: SQL-based Git Repository Inspector',
-	package_data={ 'gitana': ['img/*.*'] },
+	packages=['gitana'],
+	package_dir={'gitana': ''},
+	package_data={'gitana': ['img/*.png', 'settings/*']},
 	
 )
 
 """py_modules=['foo'],"""
 """package_data={'mypkg': ['data/*.dat']},"""
+"""data_files=[('img', ['img/*']),
+				('json', ['json/*']),
+				('settings', ['settings/*']),
+			  ],"""
