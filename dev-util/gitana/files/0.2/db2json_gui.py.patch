@@ -1,6 +1,8 @@
---- db2json_gui.py.orig	2016-10-03 03:50:12.000000000 +0200
-+++ db2json_gui.py	2016-10-06 04:40:09.349419666 +0200
-@@ -2,6 +2,7 @@
+diff --git a/db2json_gui.py b/db2json_gui.py
+index 3edc13c..d4ac426 100644
+--- a/db2json_gui.py
++++ b/db2json_gui.py
+@@ -2,6 +2,7 @@ __author__ = 'atlanmod'
  
  from Tkinter import *
  from tkFileDialog import *
@@ -8,7 +10,7 @@
  import ttk
  import threading
  import os
-@@ -137,6 +138,22 @@
+@@ -137,6 +138,22 @@ class DB2JSON_GUI(Tk):
          labelExecuting.grid(column=0, row=16, sticky='EW')
  
          self.resizable(False, False)
@@ -31,7 +33,17 @@
  
      def search_for_resource(self):
          f = askopenfilename(parent=self, title='Choose a file',
-@@ -259,13 +276,16 @@
+@@ -236,6 +253,9 @@ class DB2JSON_GUI(Tk):
+                 self.FILTER = "in"
+             else:
+                 self.FILTER = "out"
++                
++            if not os.path.exists(DB2JSON_GUI.JSON_DIRECTORY_PATH):
++                os.makedirs(DB2JSON_GUI.JSON_DIRECTORY_PATH)
+ 
+             g = Gitana(self.DBNAME)
+             g.db2json(self.DBNAME, self.OUTPUT_JSON, self.LINE_DETAILS)
+@@ -259,13 +279,16 @@ class DB2JSON_GUI(Tk):
                             self.USER_ALIASES_PATH)
  
              self.info_execution.set("Finished")
