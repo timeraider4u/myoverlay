@@ -1,0 +1,66 @@
+diff --git a/git2db_gui.py b/git2db_gui.py
+index a515bf2..6e0806b 100644
+--- a/git2db_gui.py
++++ b/git2db_gui.py
+@@ -2,6 +2,7 @@ __author__ = 'atlanmod'
+ 
+ from Tkinter import *
+ from tkFileDialog import *
++import tkMessageBox
+ import threading
+ import os
+ import re
+@@ -95,6 +96,22 @@ class Git2DB_GUI(Tk):
+         labelExecuting.grid(column=0, row=11, sticky='EW')
+ 
+         self.resizable(False, False)
++        
++        # TKinker is not thread safe!
++        # See http://stackoverflow.com/questions/22541693/tkinter-and-thread-out-of-stack-space-infinite-loop
++        self.resetButtons = False
++        self.importingFailureMsg = ""
++        def do_every_50_ms(self):
++            if self.resetButtons:
++                self.buttonFinish.config(state=NORMAL)
++                self.buttonAbort.config(state=DISABLED)
++                self.resetButtons = False
++            if self.importingFailureMsg:
++                tkMessageBox.showerror("Importing GIT repository failed:", 
++                                       self.importingFailureMsg)
++                self.importingFailureMsg = ""
++            self.after(50, do_every_50_ms, self)
++        do_every_50_ms(self)
+ 
+     def search_for_directory(self):
+         dir = askdirectory(parent=self, title='Choose a directory')
+@@ -165,20 +182,25 @@ class Git2DB_GUI(Tk):
+             self.BEFORE_DATE = None
+             if self.beforeDateVariable.get() != '':
+                 self.BEFORE_DATE = self.beforeDateVariable.get()
+-            schema = self.REPO_OWNER + "_" + self.REPO_NAME
++            schema = self.REPO_NAME
++            if self.REPO_OWNER:
++                schema = self.REPO_OWNER + "_" + self.REPO_NAME
+             self.IMPORT_TYPE = self.importProcessTypeVariable.get()
+             g = Gitana(schema)
+             g.init_dbschema(schema)
+             g.git2db(schema, self.REPO_PATH, self.BEFORE_DATE, self.IMPORT_TYPE)
+ 
+             self.info_execution.set("Finished")
+-            self.buttonFinish.config(state=NORMAL)
+-            self.buttonAbort.config(state=DISABLED)
++            #self.buttonFinish.config(state=NORMAL)
++            #self.buttonAbort.config(state=DISABLED)
++            self.resetButtons = True
+         except:
+             print traceback.format_exc()
+             self.info_execution.set("Failed")
+-            self.buttonFinish.config(state=NORMAL)
+-            self.buttonAbort.config(state=DISABLED)
++            #self.buttonFinish.config(state=NORMAL)
++            #self.buttonAbort.config(state=DISABLED)
++            self.importingFailureMsg = traceback.format_exc(limit=1)
++            self.resetButtons = True
+ 
+     def start_export(self):
+         label = Label(self, text=id)

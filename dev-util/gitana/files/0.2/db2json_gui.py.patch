@@ -1,0 +1,54 @@
+--- db2json_gui.py.orig	2016-10-03 03:50:12.000000000 +0200
++++ db2json_gui.py	2016-10-06 04:40:09.349419666 +0200
+@@ -2,6 +2,7 @@
+ 
+ from Tkinter import *
+ from tkFileDialog import *
++import tkMessageBox
+ import ttk
+ import threading
+ import os
+@@ -137,6 +138,22 @@
+         labelExecuting.grid(column=0, row=16, sticky='EW')
+ 
+         self.resizable(False, False)
++        
++        # TKinker is not thread safe!
++        # See http://stackoverflow.com/questions/22541693/tkinter-and-thread-out-of-stack-space-infinite-loop
++        self.resetButtons = False
++        self.importingFailureMsg = ""
++        def do_every_50_ms(self):
++            if self.resetButtons:
++                self.buttonFinish.config(state=NORMAL)
++                self.buttonAbort.config(state=DISABLED)
++                self.resetButtons = False
++            if self.importingFailureMsg:
++                tkMessageBox.showerror("Importing GIT repository failed:", 
++                                       self.importingFailureMsg)
++                self.importingFailureMsg = ""
++            self.after(50, do_every_50_ms, self)
++        do_every_50_ms(self)
+ 
+     def search_for_resource(self):
+         f = askopenfilename(parent=self, title='Choose a file',
+@@ -259,13 +276,16 @@
+                            self.USER_ALIASES_PATH)
+ 
+             self.info_execution.set("Finished")
+-            self.buttonFinish.config(state=NORMAL)
+-            self.buttonAbort.config(state=DISABLED)
++            #self.buttonFinish.config(state=NORMAL)
++            #self.buttonAbort.config(state=DISABLED)
++            self.resetButtons = True
+         except Exception as e:
+             print traceback.format_exc()
+             self.info_execution.set("Failed")
+-            self.buttonFinish.config(state=NORMAL)
+-            self.buttonAbort.config(state=DISABLED)
++            #self.buttonFinish.config(state=NORMAL)
++            #self.buttonAbort.config(state=DISABLED)
++            self.importingFailureMsg = traceback.format_exc(limit=1)
++            self.resetButtons = True
+ 
+     def start_export(self):
+         label = Label(self, text=id)
