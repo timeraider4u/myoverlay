@@ -54,3 +54,6 @@ src_prepare() {
 # ewarn edit ../gitana/config_db.py
 # ...
 #}
+
+# TODO:
+# in db2json: create folder json!!!
