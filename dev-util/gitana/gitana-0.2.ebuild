@@ -51,9 +51,9 @@ src_prepare() {
 }
 
 #src_install() {
-# ewarn edit ../gitana/config_db.py
+# TODO: create program script/symlink in /usr/bin to ../gitana/gitana_gui.py
+# TODO: symlink ../gitana/config_db.py /etc/...db.conf
+# TODO: ewarn edit ../gitana/config_db.py
+# 
 # ...
 #}
-
-# TODO:
-# in db2json: create folder json!!!
