@@ -1,6 +1,10 @@
---- gitana_gui.py.orig	2016-10-03 03:50:12.000000000 +0200
-+++ gitana_gui.py	2016-10-05 02:19:27.077941768 +0200
-@@ -3,19 +3,22 @@
+diff --git a/gitana_gui.py b/gitana_gui.py
+--- a/gitana_gui.py
++++ b/gitana_gui.py
+@@ -1,21 +1,25 @@
++#!/usr/bin/python2.7
+ __author__ = 'atlanmod'
+ 
  from Tkinter import *
  from PIL import ImageTk, Image
  import subprocess
@@ -24,7 +28,7 @@
          labelImg = Label(image=img)
          labelImg.image = img
          labelImg.grid(row=2, columnspan=3, rowspan=10, sticky='WE')
-@@ -37,15 +40,18 @@
+@@ -37,15 +41,18 @@ class GUI(Tk):
          self.resizable(False, False)
  
      def start_import(self):

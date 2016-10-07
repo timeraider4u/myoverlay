@@ -37,7 +37,7 @@ index e3c94c6..c12f3d6 100644
          try:
              self.REPO_PATH = self.repoPathVariable.get()
              self.DBNAME = self.DBNameVariable.get()
-+            print "DB_NAME='" + self.DBNAME + "'"
++            print("DB_NAME='" + self.DBNAME + "'")
              self.BEFORE_DATE = self.beforeDateVariable.get()
              self.IMPORT_LAST_COMMIT = self.lastCommitCorruptedVariable.get()
              g = Gitana(self.DBNAME)
