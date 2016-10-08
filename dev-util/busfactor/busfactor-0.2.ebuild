@@ -30,32 +30,20 @@ src_prepare() {
 		|| die "Could not copy '${FILESDIR}/${PV}/init__.py' to '${S}/__init.py'"
 	cp "${FILESDIR}/${PV}/setup.py" "${S}/setup.py" \
 		|| die "Could not copy '${FILESDIR}/${PV}/setup.py' to '${S}/setup.py'"
-	#epatch "${FILESDIR}/${PV}/db2json_gui.py.patch"
-	#epatch "${FILESDIR}/${PV}/git2db_gui.py.patch"
-	#epatch "${FILESDIR}/${PV}/gitana_gui.py.patch"
-	#epatch "${FILESDIR}/${PV}/init_dbschema.py.patch"
-	#epatch "${FILESDIR}/${PV}/updatedb_gui.py.patch"
+	epatch "${FILESDIR}/${PV}/bus_factor_gui.py.patch"
 	distutils-r1_python_prepare_all
 	eapply_user
 }
 
-#python_install() {
-#	distutils-r1_python_install
-#	# install config file
-#	dodir /etc/
-#	local MY_SITEDIR=$(python_get_sitedir)
-#	local MY_FILE="${MY_SITEDIR}/${PN}/config_db.py"
-#	local MY_CONF="/etc/gitana_db.conf"
-#	mv "${D}${MY_FILE}" "${D}${MY_CONF}" \
-#		|| die "Could not move '${D}${MY_FILE}' to '${D}${MY_CONF}"
-#	dosym "${MY_CONF}" "${MY_FILE}"
-#	ewarn "Please edit /etc/gitana_db.conf with settings for your MySQL server."
-#	# install executable gitana_gui in /usr/bin
-#	local MY_SCRIPT="${MY_SITEDIR}/${PN}/gitana_gui.sh"
-#	echo "${PYTHON} ${MY_SITEDIR}/${PN}/gitana_gui.py" \
-#		>> "${D}${MY_SCRIPT}" \
-#		|| die "Could not create '${D}${MY_SCRIPT}"
-#	chmod +x "${D}${MY_SCRIPT}" || die "Could not chmod for '${D}${MY_SCRIPT}'"
-#	dodir /usr/bin
-#	dosym "${MY_SCRIPT}" "/usr/bin/gitana_gui"
-#}
+python_install() {
+	distutils-r1_python_install
+	# install executable script in /usr/bin
+	local MY_SITEDIR=$(python_get_sitedir)
+	local MY_SCRIPT="${MY_SITEDIR}/${PN}/bus_factor_gui.sh"
+	echo "${PYTHON} ${MY_SITEDIR}/${PN}/bus_factor_gui.py" \
+		>> "${D}${MY_SCRIPT}" \
+		|| die "Could not create '${D}${MY_SCRIPT}"
+	chmod +x "${D}${MY_SCRIPT}" || die "Could not chmod for '${D}${MY_SCRIPT}'"
+	dodir /usr/bin
+	dosym "${MY_SCRIPT}" "/usr/bin/busfactor_gui"
+}

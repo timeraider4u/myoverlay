@@ -22,6 +22,7 @@ setup(name='busfactor',
 	keywords='Busfactor: Bus factor analyzer Git repositoriesr',
 	packages=['busfactor'],
 	package_dir={'busfactor': ''},
-	package_data={'busfactor': ['css/*.css', 'data/*.json', 'js/*.js']},
-	
+	package_data={'busfactor': ['css/*.css', 'css/bootstrap/*.css',
+							 'data/*.json', 'js/*.js', 'js/bootstrap/*.js',
+							 'js/vendor/*.js', '*.png', 'index.html']},
 )
