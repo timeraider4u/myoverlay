@@ -41,9 +41,13 @@ src_prepare() {
 		|| die "Could not copy '${FILESDIR}/${PV}/init__.py' to '${S}/__init.py'"
 	cp "${FILESDIR}/${PV}/setup.py" "${S}/setup.py" \
 		|| die "Could not copy '${FILESDIR}/${PV}/setup.py' to '${S}/setup.py'"
+	epatch "${FILESDIR}/${PV}/case_study.py.patch"
 	epatch "${FILESDIR}/${PV}/db2json_gui.py.patch"
+	epatch "${FILESDIR}/${PV}/git2db.py.patch"
 	epatch "${FILESDIR}/${PV}/git2db_gui.py.patch"
+	epatch "${FILESDIR}/${PV}/gitana.py.patch"
 	epatch "${FILESDIR}/${PV}/gitana_gui.py.patch"
+	epatch "${FILESDIR}/${PV}/gitquerier_gitpython.py.patch"
 	epatch "${FILESDIR}/${PV}/init_dbschema.py.patch"
 	epatch "${FILESDIR}/${PV}/updatedb_gui.py.patch"
 	distutils-r1_python_prepare_all

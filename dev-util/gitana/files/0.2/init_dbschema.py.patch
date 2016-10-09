@@ -1,5 +1,5 @@
 diff --git a/init_dbschema.py b/init_dbschema.py
-index 3429e3f..52b4f7b 100644
+index 3429e3f..da87d2c 100644
 --- a/init_dbschema.py
 +++ b/init_dbschema.py
 @@ -11,6 +11,7 @@ class InitDbSchema():

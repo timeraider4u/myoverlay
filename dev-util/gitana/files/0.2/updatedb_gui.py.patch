@@ -1,5 +1,5 @@
 diff --git a/updatedb_gui.py b/updatedb_gui.py
-index e3c94c6..c12f3d6 100644
+index e3c94c6..b89ba4d 100644
 --- a/updatedb_gui.py
 +++ b/updatedb_gui.py
 @@ -2,6 +2,7 @@ __author__ = 'atlanmod'
@@ -50,7 +50,8 @@ index e3c94c6..c12f3d6 100644
 +            #self.buttonAbort.config(state=DISABLED)
 +            self.resetButtons = True
          except:
-             print traceback.format_exc()
+-            print traceback.format_exc()
++            print( traceback.format_exc())
              self.info_execution.set("Failed")
 -            self.buttonFinish.config(state=NORMAL)
 -            self.buttonAbort.config(state=DISABLED)
