@@ -13,7 +13,7 @@ DESCRIPTION="A bus factor analyzer for Git repositories"
 HOMEPAGE="https://github.com/SOM-Research/busfactor"
 SRC_URI="https://timeraider4u.github.io/myoverlay/files/${P}.tar.gz -> ${P}.tar.gz"
 
-LICENSE="Unknown"
+LICENSE="MIT"
 SLOT="0"
 IUSE=""
 
