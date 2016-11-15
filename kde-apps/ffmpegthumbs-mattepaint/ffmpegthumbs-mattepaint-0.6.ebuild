@@ -17,7 +17,7 @@ IUSE=""
 
 DEPEND="dev-qt/qtcore:5"
 RDEPEND="dev-libs/qjson
-	>media-video/ffmpeg-2.9"
+	=media-video/ffmpeg-2.8*"
 
 src_unpack() {
 	unpack ${A}
@@ -25,6 +25,7 @@ src_unpack() {
 	test -d "${DIR}" || die "Could not find '${DIR}'"
 	mv "${DIR}" "${S}" \
 		|| die "Could not move '${DIR}' to '${S}'"
+	elog "using '${DIR}' as '${S}'"
 }
 
 src_configure(){
