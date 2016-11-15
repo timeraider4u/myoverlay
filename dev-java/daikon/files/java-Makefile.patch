@@ -1,0 +1,11 @@
+--- java/Makefile.orig	2016-11-04 18:28:52.000000000 +0100
++++ java/Makefile	2016-11-04 18:40:20.841231758 +0100
+@@ -464,7 +464,7 @@
+ ## ${JAVA_FILES} is so long I can't see the result on the same screen as the command.
+ # Do not mark this target as .PHONY.  We want it to
+ # always recompile, whether recompilation is necessary or not.  (Why?)
+-all_directly: ../plume-lib ${AUTO_GENERATED_FILES} plume-copy-and-check java_files.txt
++all_directly: java_files.txt
+ # # If SplitterFactoryTestUpdater.java is newer than SplitterFactoryTest.java, then delete the latter.
+ # 	if [ daikon/test/split/SplitterFactoryTestUpdater.java -nt daikon/test/split/SplitterFactoryTest.java ] ; then rm -f daikon/test/split/SplitterFactoryTest.java; fi
+ 	rm -f `find daikon -name "*.class" -print`
