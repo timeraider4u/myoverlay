@@ -13,7 +13,7 @@ HOMEPAGE="http://fixounet.free.fr/avidemux"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
-IUSE="debug nls sdl system-ffmpeg vaapi vdpau video_cards_fglrx xv"
+IUSE="debug nls sdl system_ffmpeg vaapi vdpau video_cards_fglrx xv"
 KEYWORDS="~amd64 ~x86"
 
 MY_PN="${PN/-core/}"
@@ -25,7 +25,9 @@ DEPEND="
 	!<media-video/avidemux-${PV}:${SLOT}
 	dev-db/sqlite:3
 	sdl? ( media-libs/libsdl:0 )
-	system-ffmpeg? ( >=virtual/ffmpeg-9:0[mp3,theora] )
+	system_ffmpeg? (
+		>=virtual/ffmpeg-9:0[mp3,theora]
+		)
 	xv? ( x11-libs/libXv:0 )
 	vaapi? ( x11-libs/libva:0 )
 	vdpau? ( x11-libs/libvdpau:0 )
@@ -41,7 +43,7 @@ DEPEND="
 	$DEPEND
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )
-	!system-ffmpeg? ( dev-lang/yasm[nls=] )
+	!system_ffmpeg? ( dev-lang/yasm[nls=] )
 "
 
 S="${WORKDIR}/${MY_P}"
@@ -54,13 +56,13 @@ src_prepare() {
 
 	cmake-utils_src_prepare
 
-	if use system-ffmpeg ; then
+	if use system_ffmpeg ; then
 		# Preparations to support the system ffmpeg. Currently fails because it depends on files the system ffmpeg doesn't install.
 		local error="Failed to remove ffmpeg."
 
 		rm -rf cmake/admFFmpeg* cmake/ffmpeg* avidemux_core/ffmpeg_package buildCore/ffmpeg || die "${error}"
-		sed -i -e 's/include(admFFmpegUtil)//g' avidemux/commonCmakeApplication.cmake || die "${error}"
-		sed -i -e '/registerFFmpeg/d' avidemux/commonCmakeApplication.cmake || die "${error}"
+		sed -i -e 's/include(admFFmpegUtil)//g' cmake/commonCmakeApplication.cmake || die "${error}"
+		sed -i -e '/registerFFmpeg/d' cmake/commonCmakeApplication.cmake || die "${error}"
 		sed -i -e 's/include(admFFmpegBuild)//g' avidemux_core/CMakeLists.txt || die "${error}"
 	else
 		# Avoid existing avidemux installations from making the build process fail, bug #461496.

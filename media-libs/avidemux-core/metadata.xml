@@ -6,6 +6,6 @@
     <name>Harald Weiner</name>
   </maintainer>
   <use>
-    <flag name="system-ffmpeg">Use the ffmpeg provided by the system.</flag>
+    <flag name="system_ffmpeg">Use the ffmpeg provided by the system.</flag>
   </use>
 </pkgmetadata>
