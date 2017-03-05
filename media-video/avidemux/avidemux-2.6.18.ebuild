@@ -17,16 +17,7 @@ LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="debug opengl nls qt4 qt5 sdl vaapi vdpau video_cards_fglrx xv"
 KEYWORDS="~amd64 ~x86"
 
-MY_PN="avidemux"
-if [[ ${PV} == *9999* ]] ; then
-	KEYWORDS=""
-	#PROPERTIES="live"
-	EGIT_REPO_URI="git://github.com/mean00/${MY_PN}2"
-
-	inherit git-r3
-else
-	SRC_URI="https://github.com/mean00/${MY_PN}2/archive/${PV}.tar.gz -> ${MY_PN}_${PV}.tar.gz"
-fi
+SRC_URI="https://github.com/mean00/avidemux2/archive/${PV}.tar.gz -> avidemux_${PV}.tar.gz"
 
 DEPEND="
 	~media-libs/avidemux-core-${PV}:${SLOT}[nls?,sdl?,vaapi?,vdpau?,video_cards_fglrx?,xv?]
@@ -38,7 +29,7 @@ DEPEND="
 RDEPEND="$DEPEND"
 PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt4?,qt5?]"
 
-S="${WORKDIR}/${MY_P}"
+S="${WORKDIR}/avidemux_${PV}"
 
 src_prepare() {
 
@@ -62,7 +53,27 @@ src_prepare() {
 	# Fix underlinking to work with gold linker
 	sed -i -e 's/\( ADM_core6\)/ Xext\1/' avidemux/common/ADM_render/CMakeLists.txt || die "Couldn't fix underlinking"
 
-	cmake-utils_src_prepare
+	eapply_user
+}
+
+function process_configure() {
+	local process_src_dir="${1}"
+	local process_build_dir="${2}"
+	local is_qt_x="${3}"
+	local mycmakeargs=( ${4} )
+
+	if [[ "${is_qt_x}" == "qt4" ]]; then
+		export QT_SELECT=4
+	elif [[ "${is_qt_x}" == "qt5" ]]; then
+		export QT_SELECT=5
+		mycmakeargs+=( -DENABLE_QT5=True )
+	fi
+
+	mkdir "${S}"/${process_build_dir} || die "Can't create build folder."
+	cd "${S}"/${process_build_dir} || die "Can't enter build folder."
+	CMAKE_USE_DIR="${S}/${process_src_dir}" \
+		BUILD_DIR="${S}/${process_build_dir}" \
+		cmake-utils_src_configure
 }
 
 src_configure() {
@@ -75,20 +86,6 @@ src_configure() {
 		-DXVBA="$(usex video_cards_fglrx)"
 		-DXVIDEO="$(usex xv)"
 	)
-
-	processes="buildCLI:avidemux/cli"
-	if use qt5 ; then
-		mycmakeargs+=( -DENABLE_QT5=True )
-		#export QT_SELECT=5
-		processes+=" buildQt5:avidemux/qt4"
-		#append-cxxflags $(test-flags-CXX -std=gnu++11)
-	fi
-	if use qt4 ; then
-		#export QT_SELECT=4
-		processes+=" buildQt4:avidemux/qt4"
-		# Needed for gcc-6
-		#append-cxxflags $(test-flags-CXX -std=gnu++98)
-	fi
 
 	if use debug ; then
 		mycmakeargs+=( -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1 )
@@ -105,13 +102,18 @@ src_configure() {
 	# See bug 432322.
 	use x86 && replace-flags -O0 -O1
 
-	for process in ${processes} ; do
-		local build="${process%%:*}"
-
-		mkdir "${S}"/${build} || die "Can't create build folder."
-		cd "${S}"/${build} || die "Can't enter build folder."
-		CMAKE_USE_DIR="${S}"/${process#*:} BUILD_DIR="${S}"/${build} cmake-utils_src_configure
-	done
+	processes="build_cli:avidemux/cli"
+	process_configure "avidemux/cli" "build_cli" "" ${mycmakeargs}
+	if use qt5 ; then
+		processes+=" build_qt5:avidemux/qt4"
+		process_configure "avidemux/qt4" "build_qt5" "qt5" \
+			${mycmakeargs}
+	fi
+	if use qt4 ; then
+		processes+=" build_qt4:avidemux/qt4"
+		process_configure "avidemux/qt4" "build_qt4" "qt4" \
+			${mycmakeargs}
+	fi
 }
 
 src_compile() {

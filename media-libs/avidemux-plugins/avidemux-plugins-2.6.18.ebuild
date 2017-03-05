@@ -17,16 +17,7 @@ LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="aac aften a52 alsa amr debug dts fontconfig fribidi jack lame libsamplerate cpu_flags_x86_mmx nvenc opengl opus oss pulseaudio qt4 qt5 vorbis truetype twolame xv xvid x264 x265 vdpau vpx"
 KEYWORDS="~amd64 ~x86"
 
-MY_PN="avidemux"
-if [[ ${PV} == *9999* ]] ; then
-	KEYWORDS=""
-	#PROPERTIES="live"
-	EGIT_REPO_URI="git://github.com/mean00/${MY_PN}2"
-
-	inherit git-r3
-else
-	SRC_URI="https://github.com/mean00/${MY_PN}2/archive/${PV}.tar.gz -> ${MY_PN}_${PV}.tar.gz"
-fi
+SRC_URI="https://github.com/mean00/avidemux2/archive/${PV}.tar.gz -> avidemux_${PV}.tar.gz"
 
 DEPEND="
 	~media-libs/avidemux-core-${PV}:${SLOT}[vdpau?]
@@ -70,15 +61,75 @@ DEPEND="
 "
 RDEPEND="$DEPEND"
 
-S="${WORKDIR}/${MY_P}"
+S="${WORKDIR}/avidemux_${PV}"
 
 REQUIRED_USE="!amd64? ( !nvenc ) "
 
-PATCHES=(
-	"${FILESDIR}"/${PN}-2.6.14-optional-pulse.patch
-)
+src_prepare() {
+	eapply_user
+}
+
+function process_configure() {
+	local process_src_dir="${1}"
+	local process_build_dir="${2}"
+	local is_qt_x="${3}"
+	local mycmakeargs=( ${4} )
+
+	if [[ "${is_qt_x}" == "qt4" ]]; then
+		export QT_SELECT=4
+	elif [[ "${is_qt_x}" == "qt5" ]]; then
+		export QT_SELECT=5
+		mycmakeargs+=( -DENABLE_QT5=True )
+	fi
+
+	mycmakeargs+=(
+		-DAVIDEMUX_SOURCE_DIR="'${S}'"
+		-DPLUGIN_UI="${process_build_dir}"
+		-DFAAC="$(usex aac)"
+		-DFAAD="$(usex aac)"
+		-DALSA="$(usex alsa)"
+		-DAFTEN="$(usex aften)"
+		-DOPENCORE_AMRWB="$(usex amr)"
+		-DOPENCORE_AMRNB="$(usex amr)"
+		-DLIBDCA="$(usex dts)"
+		-DFONTCONFIG="$(usex fontconfig)"
+		-DJACK="$(usex jack)"
+		-DLAME="$(usex lame)"
+		-DNVENC="$(usex nvenc)"
+		-DOPUS="$(usex opus)"
+		-DOSS="$(usex oss)"
+		-DPULSEAUDIOSIMPLE="$(usex pulseaudio)"
+		-DQT4="$(usex qt4)"
+		-DQT5="$(usex qt5)"
+		-DFREETYPE2="$(usex truetype)"
+		-DTWOLAME="$(usex twolame)"
+		-DX264="$(usex x264)"
+		-DX265="$(usex x265)"
+		-DXVIDEO="$(usex xv)"
+		-DXVID="$(usex xvid)"
+		-DVDPAU="$(usex vdpau)"
+		-DVORBIS="$(usex vorbis)"
+		-DLIBVORBIS="$(usex vorbis)"
+		-DVPXDEC="$(usex vpx)"
+	)
+
+	if [[ "${is_qt_x}" == "qt4" ]]; then
+		export QT_SELECT=4
+	elif [[ "${is_qt_x}" == "qt5" ]]; then
+		export QT_SELECT=5
+		mycmakeargs+=( -DENABLE_QT5=True )
+	fi
+
+	mkdir "${S}"/${process_build_dir} || die "Can't create build folder."
+	cd "${S}"/${process_build_dir} || die "Can't create build folder."
+	CMAKE_USE_DIR="${S}/${process_src_dir}" \
+		BUILD_DIR="${S}/${process_build_dir}" \
+		cmake-utils_src_configure
+}
 
 src_configure() {
+	local mycmakeargs=( )
+
 	# Add lax vector typing for PowerPC.
 	if use ppc || use ppc64 ; then
 		append-cflags -flax-vector-conversions
@@ -90,62 +141,24 @@ src_configure() {
 	# Filter problematic flags
 	filter-flags -fwhole-program -flto
 
-	processes="buildPluginsCommon:avidemux_plugins
-		buildPluginsCLI:avidemux_plugins"
-	if use qt4 || use qt5 ; then
-		processes+=" buildPluginsQt4:avidemux_plugins"
-		if use qt5 ; then
-			mycmakeargs+=( -DENABLE_QT5=True )
-		#	export QT_SELECT=5
-		#	append-cxxflags $(test-flags-CXX -std=gnu++11)
-		#else
-		#	export QT_SELECT=4
-		#	# Needed for gcc-6
-		#	append-cxxflags $(test-flags-CXX -std=gnu++98)
-		fi
+	if use debug ; then
+		mycmakeargs+=( -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1 )
 	fi
 
-	for process in ${processes} ; do
-		local build="${process%%:*}"
-
-		local mycmakeargs=(
-			-DAVIDEMUX_SOURCE_DIR="'${S}'"
-			-DPLUGIN_UI=$(echo ${build/buildPlugins/} | tr '[:lower:]' '[:upper:]')
-			-DFAAC="$(usex aac)"
-			-DFAAD="$(usex aac)"
-			-DALSA="$(usex alsa)"
-			-DAFTEN="$(usex aften)"
-			-DOPENCORE_AMRWB="$(usex amr)"
-			-DOPENCORE_AMRNB="$(usex amr)"
-			-DLIBDCA="$(usex dts)"
-			-DFONTCONFIG="$(usex fontconfig)"
-			-DJACK="$(usex jack)"
-			-DLAME="$(usex lame)"
-			-DNVENC="$(usex nvenc)"
-			-DOPUS="$(usex opus)"
-			-DOSS="$(usex oss)"
-			-DPULSEAUDIOSIMPLE="$(usex pulseaudio)"
-			-DQT4="$(usex qt4)"
-			-DFREETYPE2="$(usex truetype)"
-			-DTWOLAME="$(usex twolame)"
-			-DX264="$(usex x264)"
-			-DX265="$(usex x265)"
-			-DXVIDEO="$(usex xv)"
-			-DXVID="$(usex xvid)"
-			-DVDPAU="$(usex vdpau)"
-			-DVORBIS="$(usex vorbis)"
-			-DLIBVORBIS="$(usex vorbis)"
-			-DVPXDEC="$(usex vpx)"
-		)
-
-		if use debug ; then
-			mycmakeargs+=( -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1 )
-		fi
-
-		mkdir "${S}"/${build} || die "Can't create build folder."
-
-		CMAKE_USE_DIR="${S}"/${process#*:} BUILD_DIR="${S}"/${build} cmake-utils_src_configure
-	done
+	processes="build_plugins_COMMON:avidemux_plugins"
+	process_configure "avidemux_plugins" "build_plugins_COMMON" "" ${mycmakeargs}
+	processes+="build_plugins_CLI:avidemux_plugins"
+	process_configure "avidemux_plugins" "build_plugins_CLI" "" ${mycmakeargs}
+	if use qt5 ; then
+		processes+=" build_plugins_QT5:avidemux_plugins"
+		process_configure "avidemux_plugins" "build_plugins_QT5" "qt5" \
+			${mycmakeargs}
+	fi
+	if use qt4 ; then
+		processes+=" build_plugins_QT4:avidemux_plugins"
+		process_configure "avidemux_plugins" "build_plugins_QT4" "qt4" \
+			${mycmakeargs}
+	fi
 }
 
 src_compile() {
