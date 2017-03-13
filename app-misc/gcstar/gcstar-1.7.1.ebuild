@@ -47,10 +47,10 @@ DEPEND="${RDEPEND}"
 
 S="${WORKDIR}/${PN}"
 
-src_prepare() {
-	epatch "${FILESDIR}/${PN}-1.4.0-man.patch"
-#	epatch "${FILESDIR}/${P}-gcstar.desktop.patch"
-}
+PATCHES=(
+	"${FILESDIR}/${PN}-1.4.0-man.patch"
+	#	epatch "${FILESDIR}/${P}-gcstar.desktop.patch"
+)
 
 src_install() {
 	if [[ -n ${LINGUAS+set} ]]; then
