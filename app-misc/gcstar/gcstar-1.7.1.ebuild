@@ -49,7 +49,6 @@ S="${WORKDIR}/${PN}"
 
 PATCHES=(
 	"${FILESDIR}/${PN}-1.4.0-man.patch"
-	#	epatch "${FILESDIR}/${P}-gcstar.desktop.patch"
 )
 
 src_install() {
@@ -85,11 +84,11 @@ src_install() {
 	domenu share/applications/gcstar.desktop
 	for size in 16 22 24 32 36 48 64 72 96 128 256
 	do
-		insinto /usr/share/icons/hicolor/${size}x${size}/apps
-		newins share/gcstar/icons/gcstar_${size}x${size}.png gcstar.png
+		newicon -s "${size}" \
+			share/gcstar/icons/gcstar_${size}x${size}.png \
+			gcstar.png
 	done
-	insinto /usr/share/icons/hicolor/scalable/apps
-	newins share/gcstar/icons/gcstar_scalable.svg gcstar.svg
+	newicon -s scalable share/gcstar/icons/gcstar_scalable.svg gcstar.svg
 	insinto /usr/share/mime/packages
 	doins share/applications/gcstar.xml
 
