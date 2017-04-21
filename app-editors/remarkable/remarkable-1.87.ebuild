@@ -17,22 +17,24 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 COMMON_DEPEND="
-		dev-python/beautifulsoup:4[${PYTHON_USEDEP}]
-		dev-python/markdown[${PYTHON_USEDEP}]
-		dev-python/pycairo[${PYTHON_USEDEP}]
-		dev-python/pygobject[${PYTHON_USEDEP}]
-		dev-python/pywebkitgtk[${PYTHON_USEDEP}]
-		media-gfx/wkhtmltopdf[${PYTHON_USEDEP}]
+		dev-python/beautifulsoup:4
+		dev-python/markdown
+		dev-python/pycairo
+		dev-python/pygobject:=
+		dev-python/pywebkitgtk
+		media-gfx/wkhtmltopdf
 		"
 	# python-gtkspellcheck
 DEPEND="${COMMON_DEPEND}"
-RDEPEND="${COMMON_DEPEND}"
+RDEPEND="${COMMON_DEPEND}
+		net-libs/webkit-gtk:3
+		x11-libs/gtksourceview:3.0"
 
 S="${WORKDIR}"
 
 src_unpack() {
 	unpack ${A}
-	unpack ${WORKDIR}/data.tar.xz
+	unpack "${WORKDIR}/data.tar.xz"
 }
 
 src_install() {
