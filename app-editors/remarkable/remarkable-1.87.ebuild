@@ -15,6 +15,7 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
+#IUSE="+spell"
 
 COMMON_DEPEND="
 		dev-python/beautifulsoup:4
@@ -24,17 +25,28 @@ COMMON_DEPEND="
 		dev-python/pywebkitgtk
 		media-gfx/wkhtmltopdf
 		"
-	# python-gtkspellcheck
 DEPEND="${COMMON_DEPEND}"
 RDEPEND="${COMMON_DEPEND}
 		net-libs/webkit-gtk:3
-		x11-libs/gtksourceview:3.0"
+		x11-libs/gtksourceview:3.0
+		"
+# https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/python-gtkspellcheck
+# python-gtkspellcheck not available in Gentoo yet!
+# spell? ( dev-python/gtkspell-python )
 
 S="${WORKDIR}"
 
 src_unpack() {
 	unpack ${A}
 	unpack "${WORKDIR}/data.tar.xz"
+}
+
+src_prepare() {
+	sed -i "s/import styles/from remarkable import styles/" \
+		"${S}/usr/lib/python3/dist-packages/remarkable/RemarkableWindow.py" \
+		|| die "Could not replace 'import styles' with" \
+			"'from remarkable import styles'"
+	eapply_user
 }
 
 src_install() {
