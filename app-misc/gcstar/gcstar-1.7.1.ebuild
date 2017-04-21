@@ -17,7 +17,7 @@ IUSE="cddb gnome mp3 spell stats tellico vorbis"
 RDEPEND="dev-lang/perl
 	dev-perl/Archive-Zip
 	dev-perl/DateTime-Format-Strptime
-	dev-perl/gtk2-perl
+	dev-perl/Gtk2
 	dev-perl/HTML-Parser
 	dev-perl/libwww-perl
 	dev-perl/URI
