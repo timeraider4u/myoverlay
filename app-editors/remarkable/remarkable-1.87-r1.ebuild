@@ -9,13 +9,14 @@ inherit python-r1
 
 DESCRIPTION="A free fully featured markdown editor for Linux."
 HOMEPAGE="http://remarkableapp.github.io"
-SRC_URI="http://remarkableapp.github.io/files/${PN}_${PV}_all.deb"
+SRC_URI="http://remarkableapp.github.io/files/${PN}_${PV}_all.deb
+	doc? ( https://raw.githubusercontent.com/jamiemcg/Remarkable/master/README.md -> ${PN}.md )"
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE=""
-#IUSE="+spell"
+IUSE="doc"
+#IUSE="doc +spell"
 
 COMMON_DEPEND="
 		dev-python/beautifulsoup:4
@@ -37,8 +38,12 @@ RDEPEND="${COMMON_DEPEND}
 S="${WORKDIR}"
 
 src_unpack() {
-	unpack ${A}
+	unpack "${PN}_${PV}_all.deb"
 	unpack "${WORKDIR}/data.tar.xz"
+	if use doc ; then
+		cp "${DISTDIR}/${PN}.md" "${S}/README.md" || \
+			die "Could not copy README.md"
+	fi
 }
 
 src_prepare() {
@@ -55,7 +60,8 @@ src_install() {
 	insinto "/usr/share/"
 	doins -r "usr/lib/mime"
 	doins -r "usr/share/"{applications,glib-2.0,help,icons,remarkable}
-	dodoc "usr/share/doc/remarkable"/*
+	use doc && dodoc README.md
+	use doc && dodoc "usr/share/doc/remarkable"/*
 	# install dist-packages
 	python_setup 'python3*'
 	python_export PYTHON_SITEDIR
