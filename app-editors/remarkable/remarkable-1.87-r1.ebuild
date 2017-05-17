@@ -4,6 +4,7 @@
 EAPI=6
 
 PYTHON_COMPAT=( python3_4 )
+PYTHON_REQ_USE=""
 
 inherit python-r1
 
@@ -17,7 +18,6 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="doc"
 #IUSE="doc +spell"
-
 COMMON_DEPEND="
 		dev-python/beautifulsoup:4
 		dev-python/markdown
@@ -63,7 +63,7 @@ src_install() {
 	use doc && dodoc README.md
 	use doc && dodoc "usr/share/doc/remarkable"/*
 	# install dist-packages
-	python_setup 'python3*'
+	python_setup
 	python_export PYTHON_SITEDIR
 	insinto "${PYTHON_SITEDIR}"
 	doins -r "usr/lib/python3/dist-packages"/*
