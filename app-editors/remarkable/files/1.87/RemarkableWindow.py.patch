@@ -1,14 +1,5 @@
 --- a/usr/lib/python3/dist-packages/remarkable/RemarkableWindow.py	2017-04-25 03:45:33.320957245 +0200
 +++ b/usr/lib/python3/dist-packages/remarkable/RemarkableWindow.py	2017-05-17 20:34:19.528315937 +0200
-@@ -36,7 +36,7 @@
- import re, subprocess, datetime, os, webbrowser, _thread, sys, locale
- import tempfile
- import traceback
--from remarkable import styles
-+import styles
- import unicodedata
- import warnings
- import datetime
 @@ -520,6 +520,8 @@
          start, end = self.text_buffer.get_bounds()
          text = self.text_buffer.get_text(start, end, False)

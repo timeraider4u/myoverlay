@@ -6,7 +6,7 @@ EAPI=6
 PYTHON_COMPAT=( python3_4 )
 PYTHON_REQ_USE=""
 
-inherit python-r1
+inherit eutils python-r1
 
 DESCRIPTION="A free fully featured markdown editor for Linux."
 HOMEPAGE="http://remarkableapp.github.io"
@@ -47,6 +47,7 @@ src_unpack() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${PV}/RemarkableWindow.py.patch"
 	sed -i "s/import styles/from remarkable import styles/" \
 		"${S}/usr/lib/python3/dist-packages/remarkable/RemarkableWindow.py" \
 		|| die "Could not replace 'import styles' with" \
