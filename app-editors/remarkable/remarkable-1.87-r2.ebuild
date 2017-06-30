@@ -27,8 +27,9 @@ COMMON_DEPEND="
 		media-gfx/wkhtmltopdf
 		"
 DEPEND="${COMMON_DEPEND}"
+# use same net-libs/webkit-gtk version as dependency dev-python/pywebkitgtk
 RDEPEND="${COMMON_DEPEND}
-		net-libs/webkit-gtk:3
+		net-libs/webkit-gtk:2
 		x11-libs/gtksourceview:3.0
 		"
 # https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/python-gtkspellcheck
