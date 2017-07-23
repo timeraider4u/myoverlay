@@ -23,13 +23,12 @@ COMMON_DEPEND="
 		dev-python/markdown
 		dev-python/pycairo
 		dev-python/pygobject:=
-		dev-python/pywebkitgtk
 		media-gfx/wkhtmltopdf
 		"
 DEPEND="${COMMON_DEPEND}"
 # use same net-libs/webkit-gtk version as dependency dev-python/pywebkitgtk
 RDEPEND="${COMMON_DEPEND}
-		net-libs/webkit-gtk:2
+		net-libs/webkit-gtk:4
 		x11-libs/gtksourceview:3.0
 		"
 # https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/python-gtkspellcheck
@@ -48,7 +47,8 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${PV}/RemarkableWindow.py.patch"
+	#epatch "${FILESDIR}/${PV}/RemarkableWindow.py.patch"
+	epatch "${FILESDIR}/${PV}/RemarkableWindow.py.webkit2.patch"
 	sed -i "s/import styles/from remarkable import styles/" \
 		"${S}/usr/lib/python3/dist-packages/remarkable/RemarkableWindow.py" \
 		|| die "Could not replace 'import styles' with" \
