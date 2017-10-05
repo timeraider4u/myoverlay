@@ -6,12 +6,13 @@ EAPI=6
 PYTHON_COMPAT=( python3_4 )
 PYTHON_REQ_USE=""
 
-inherit eutils python-r1
+inherit eutils git-r3 python-r1
 
 DESCRIPTION="A free fully featured markdown editor for Linux."
 HOMEPAGE="http://remarkableapp.github.io"
-SRC_URI="http://remarkableapp.github.io/files/${PN}_${PV}_all.deb
-	doc? ( https://raw.githubusercontent.com/jamiemcg/Remarkable/master/README.md -> ${PN}.md )"
+
+EGIT_REPO_URI="https://github.com/timeraider4u/Remarkable.git"
+EGIT_BRANCH="webkit2gtk"
 
 LICENSE="MIT"
 SLOT="0"
@@ -35,35 +36,35 @@ RDEPEND="${COMMON_DEPEND}
 # python-gtkspellcheck not available in Gentoo yet!
 # spell? ( dev-python/gtkspell-python )
 
-S="${WORKDIR}"
+S="${WORKDIR}/${P}/"
 
-src_unpack() {
-	unpack "${PN}_${PV}_all.deb"
-	unpack "${WORKDIR}/data.tar.xz"
-	if use doc ; then
-		cp "${DISTDIR}/${PN}.md" "${S}/README.md" || \
-			die "Could not copy README.md"
-	fi
+pkg_setup() {
+	PREFIX="${S}/usr"
 }
 
 src_prepare() {
-	#epatch "${FILESDIR}/${PV}/RemarkableWindow.py.patch"
-	epatch "${FILESDIR}/${PV}/RemarkableWindow.py.webkit2.patch"
+	cp "${FILESDIR}/${PV}/install.sh" "${S}/" \
+		|| die "Could not execute cp '${FILESDIR}/${PV}/install.sh' '${S}'"
 	sed -i "s/import styles/from remarkable import styles/" \
-		"${S}/usr/lib/python3/dist-packages/remarkable/RemarkableWindow.py" \
+		"${S}/remarkable/RemarkableWindow.py" \
 		|| die "Could not replace 'import styles' with" \
 			"'from remarkable import styles'"
 	eapply_user
 }
 
 src_install() {
+	# install files as if we are unzipping the debian binary package (.deb)
+	(source ./install.sh) || die "Could not install files!"
+	
+	# install files/folders for real
 	exeinto "/usr/bin"
 	doexe "usr/bin/remarkable"
 	insinto "/usr/share/"
 	doins -r "usr/lib/mime"
 	doins -r "usr/share/"{applications,glib-2.0,help,icons,remarkable}
 	use doc && dodoc README.md
-	use doc && dodoc "usr/share/doc/remarkable"/*
+	#use doc && dodoc "usr/share/doc/remarkable"/*
+	
 	# install dist-packages
 	python_setup
 	python_export PYTHON_SITEDIR
