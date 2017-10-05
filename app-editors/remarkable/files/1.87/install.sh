@@ -1,3 +1,17 @@
+#!/bin/bash
+# 
+# Copyright (C) 2017 Harald Weiner
+# 
+# Use to install files from GIT repository to same locations as
+# debian binary package (*.deb) would do, but without registering
+# them to Linux distribution package managers.
+# 
+# Set PREFIX environment variable to set root-directory of
+# installation procedure (e.g., export PREFIX="/usr/local").
+# 
+# TODO: doc files are still missing!
+#
+
 function die() {
 	echo "${1}"
 	exit 1
