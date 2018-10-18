@@ -24,6 +24,8 @@ src_unpack() {
 	test -d "${DIR}" || die "Could not find '${DIR}'"
 	mv "${DIR}" "${S}" \
 		|| die "Could not move '${DIR}' to '${S}'"
+	sed -i -s 's|) and (|) \&\& (|g' "${S}/ffmpegthumbnailer/imagewriter.cpp" \
+		|| die "Could not replace and with && in C++ file"
 }
 
 src_configure(){
