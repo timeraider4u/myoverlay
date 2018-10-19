@@ -1,9 +1,0 @@
---- a/Makefile	2016-10-07 17:37:48.000000000 +0200
-+++ b/Makefile	2016-10-22 05:38:30.472305790 +0200
-@@ -1,5 +1,5 @@
- CC=gcc
--PREFIX=/usr
-+PREFIX=${D}/usr
- DOCDIR=${PREFIX}/share/doc/rarcrack
- 
- all:
