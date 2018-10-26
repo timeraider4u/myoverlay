@@ -11,7 +11,7 @@ SRC_URI="https://dl.opendesktop.org/api/files/download/id/1467623621/153902-Uplo
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 IUSE=""
 
 DEPEND="dev-qt/qtcore:5"
